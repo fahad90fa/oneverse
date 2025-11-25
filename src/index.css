@@ -1,0 +1,622 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* ===== BLACKISH-BLUE GRADIENT THEME - DARK MODE ===== */
+
+    /* Background Colors */
+    --background: 0 0% 0%; /* Pure Black (#000000) */
+    --background-secondary: 0 0% 4%; /* Rich Black (#0A0A0A) */
+    --background-card: 0 0% 10%; /* Deep Charcoal (#1A1A1A) */
+    --background-elevated: 0 0% 14%; /* Elevated Charcoal (#242424) */
+    --background-hover: 0 0% 18%; /* Hover Dark (#2E2E2E) */
+
+    /* Text Colors */
+    --foreground: 0 0% 100%; /* Pure white */
+    --foreground-secondary: 220 13% 91%; /* Light gray (#E5E7EB) */
+    --foreground-muted: 220 9% 62%; /* Muted gray (#9CA3AF) */
+    --foreground-disabled: 220 13% 46%; /* Disabled gray (#6B7280) */
+
+    /* Electric Blue Scale - Primary Brand Colors */
+    --electric-blue-50: 220 89% 98%;
+    --electric-blue-100: 220 89% 96%;
+    --electric-blue-200: 220 89% 93%;
+    --electric-blue-300: 220 89% 88%;
+    --electric-blue-400: 220 89% 78%;
+    --electric-blue-500: 220 89% 68%; /* Primary brand color (#3B82F6) */
+    --electric-blue-600: 220 89% 58%;
+    --electric-blue-700: 220 89% 48%;
+    --electric-blue-800: 220 87% 35%;
+    --electric-blue-900: 220 100% 20%;
+
+    /* Cyan Scale - Secondary Accents */
+    --cyan-300: 188 95% 72%;
+    --cyan-400: 188 95% 62%;
+    --cyan-500: 188 95% 52%;
+    --cyan-600: 188 95% 42%;
+    --cyan-700: 188 95% 32%;
+
+    /* Sky Blue Scale - Tertiary Accents */
+    --sky-blue-400: 200 98% 62%;
+    --sky-blue-500: 200 98% 52%;
+    --sky-blue-600: 200 98% 42%;
+
+    /* Functional Colors */
+    --success: 160 84% 39%; /* Emerald green */
+    --success-light: 160 84% 55%;
+    --success-dark: 160 84% 25%;
+    --warning: 45 93% 60%; /* Amber */
+    --error: 0 84% 60%; /* Red */
+    --error-light: 0 84% 75%;
+    --error-dark: 0 84% 45%;
+    --info: 188 95% 52%; /* Cyan */
+    --info-light: 188 95% 62%;
+    --info-dark: 188 95% 42%;
+
+    /* Shadcn/UI Compatible Variables */
+    --card: var(--background-card);
+    --card-foreground: var(--foreground);
+
+    --popover: var(--background-elevated);
+    --popover-foreground: var(--foreground);
+
+    --primary: var(--electric-blue-500);
+    --primary-foreground: var(--foreground);
+
+    --secondary: var(--background-secondary);
+    --secondary-foreground: var(--foreground);
+
+    --muted: var(--background-elevated);
+    --muted-foreground: var(--foreground-muted);
+
+    --accent: var(--electric-blue-400);
+    --accent-foreground: var(--foreground);
+
+    --destructive: var(--error);
+    --destructive-foreground: var(--foreground);
+
+    --border: 0 0% 20%; /* Border Dark */
+    --input: var(--background-elevated);
+    --ring: var(--electric-blue-500);
+
+    /* Sidebar Colors */
+    --sidebar-background: var(--background-secondary);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--electric-blue-500);
+    --sidebar-primary-foreground: var(--foreground);
+    --sidebar-accent: var(--electric-blue-400);
+    --sidebar-accent-foreground: var(--foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--electric-blue-500);
+
+    --radius: 1rem;
+
+    /* ===== GRADIENTS ===== */
+
+    /* Primary Blue Gradients */
+    --gradient-blue-main: linear-gradient(135deg, hsl(var(--electric-blue-600)), hsl(var(--cyan-500)));
+    --gradient-blue-button: linear-gradient(135deg, hsl(var(--electric-blue-500)), hsl(var(--sky-blue-500)));
+    --gradient-blue-dark: linear-gradient(135deg, hsl(var(--electric-blue-700)), hsl(var(--electric-blue-500)));
+    --gradient-blue-light: linear-gradient(135deg, hsl(var(--electric-blue-400)), hsl(var(--cyan-400)));
+    --gradient-blue-vertical: linear-gradient(180deg, hsl(var(--electric-blue-500)), hsl(var(--electric-blue-700)));
+
+    /* Background Gradients */
+    --gradient-black-to-blue: linear-gradient(135deg, hsl(var(--background)), hsl(var(--background-secondary)), hsl(220 20% 6%));
+    --gradient-card-subtle: linear-gradient(135deg, hsl(var(--background-card)), hsl(var(--background-elevated)));
+    --gradient-page-full: var(--gradient-black-to-blue);
+    --gradient-mesh: radial-gradient(at 25% 25%, hsl(var(--electric-blue-500) / 0.2) 0%, transparent 50%),
+                     radial-gradient(at 75% 25%, hsl(var(--cyan-500) / 0.15) 0%, transparent 50%),
+                     radial-gradient(at 75% 75%, hsl(var(--sky-blue-500) / 0.1) 0%, transparent 50%),
+                     radial-gradient(at 25% 75%, hsl(var(--electric-blue-600) / 0.15) 0%, transparent 50%);
+
+    /* Animated Gradients */
+    --gradient-blue-flowing: linear-gradient(270deg, hsl(var(--electric-blue-600)), hsl(var(--electric-blue-400)), hsl(var(--cyan-500)), hsl(var(--electric-blue-400)), hsl(var(--electric-blue-600)));
+    --gradient-premium-flow: linear-gradient(270deg, hsl(var(--electric-blue-500)), hsl(var(--electric-blue-400)), hsl(var(--cyan-500)), hsl(var(--electric-blue-400)), hsl(var(--electric-blue-500)));
+
+    /* Legacy gradients for compatibility */
+    --gradient-primary: var(--gradient-blue-button);
+    --gradient-accent: var(--gradient-blue-main);
+    --gradient-hero: var(--gradient-black-to-blue);
+
+    /* ===== SHADOWS & GLOW EFFECTS ===== */
+
+    /* Standard Shadows (black-based) */
+    --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
+    --shadow-sm: 0 2px 8px 0 hsl(0 0% 0% / 0.6);
+    --shadow-md: 0 4px 16px 0 hsl(0 0% 0% / 0.7);
+    --shadow-lg: 0 8px 32px 0 hsl(0 0% 0% / 0.8);
+    --shadow-xl: 0 12px 48px 0 hsl(0 0% 0% / 0.9);
+    --shadow-2xl: 0 20px 64px 0 hsl(0 0% 0% / 0.95);
+
+    /* Colored Blue Shadows */
+    --shadow-blue-sm: 0 4px 12px 0 hsl(var(--electric-blue-500) / 0.25);
+    --shadow-blue-md: 0 8px 24px 0 hsl(var(--electric-blue-500) / 0.35);
+    --shadow-blue-lg: 0 12px 40px 0 hsl(var(--electric-blue-500) / 0.45);
+    --shadow-cyan-sm: 0 4px 12px 0 hsl(var(--cyan-500) / 0.25);
+    --shadow-cyan-md: 0 8px 24px 0 hsl(var(--cyan-500) / 0.35);
+
+    /* Glow Effects */
+    --glow-blue-subtle: 0 0 15px hsl(var(--electric-blue-500) / 0.3);
+    --glow-blue-medium: 0 0 25px hsl(var(--electric-blue-500) / 0.5);
+    --glow-blue-strong: 0 0 35px hsl(var(--electric-blue-500) / 0.7);
+    --glow-blue-intense: 0 0 50px hsl(var(--electric-blue-500) / 0.9);
+    --glow-cyan-subtle: 0 0 15px hsl(var(--cyan-500) / 0.3);
+    --glow-cyan-medium: 0 0 25px hsl(var(--cyan-500) / 0.5);
+    --glow-cyan-strong: 0 0 35px hsl(var(--cyan-500) / 0.7);
+    --glow-premium: 0 0 20px hsl(var(--electric-blue-500) / 0.4), 0 0 40px hsl(var(--cyan-500) / 0.3), 0 0 60px hsl(var(--electric-blue-500) / 0.2);
+
+    /* Legacy shadows for compatibility */
+    --shadow-glow: var(--glow-blue-medium);
+    --shadow-accent: var(--glow-cyan-medium);
+
+    /* ===== BORDER COLORS ===== */
+    --border-subtle: hsl(0 0% 100% / 0.05);
+    --border-default: hsl(0 0% 100% / 0.1);
+    --border-medium: hsl(0 0% 100% / 0.15);
+    --border-strong: hsl(0 0% 100% / 0.2);
+    --border-blue-light: hsl(var(--electric-blue-500) / 0.2);
+    --border-blue-medium: hsl(var(--electric-blue-500) / 0.4);
+    --border-blue-strong: hsl(var(--electric-blue-500) / 0.6);
+    --border-cyan: hsl(var(--cyan-500) / 0.4);
+
+    /* ===== ANIMATIONS ===== */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===== LIGHT MODE ===== */
+  .light {
+    /* Background Colors */
+    --background: 0 0% 100%; /* Pure white */
+    --background-secondary: 220 13% 96%; /* Very light gray */
+    --background-card: 220 13% 97%; /* Light gray */
+    --background-elevated: 220 13% 95%; /* Medium light gray */
+    --background-hover: 220 13% 92%; /* Darker gray */
+
+    /* Text Colors */
+    --foreground: 220 13% 9%; /* Almost black */
+    --foreground-secondary: 220 9% 46%; /* Dark gray */
+    --foreground-muted: 220 9% 46%; /* Medium gray */
+    --foreground-disabled: 220 13% 69%; /* Light gray */
+
+    /* Electric Blue Scale - Darker variants for light mode */
+    --electric-blue-500: 220 89% 48%; /* Darker blue */
+    --electric-blue-600: 220 89% 38%;
+    --electric-blue-700: 220 89% 28%;
+
+    /* Cyan Scale - Darker variants for light mode */
+    --cyan-500: 188 95% 42%;
+
+    /* Sky Blue Scale - Darker variants for light mode */
+    --sky-blue-500: 200 98% 42%;
+
+    /* Functional Colors - Same but potentially adjusted */
+    --success: 142 76% 36%;
+    --error: 0 84% 60%;
+    --warning: 45 93% 60%;
+
+    /* Update Shadcn variables for light mode */
+    --card: var(--background-card);
+    --card-foreground: var(--foreground);
+
+    --popover: var(--background-elevated);
+    --popover-foreground: var(--foreground);
+
+    --primary: var(--electric-blue-500);
+    --primary-foreground: var(--foreground);
+
+    --secondary: var(--background-secondary);
+    --secondary-foreground: var(--foreground);
+
+    --muted: var(--background-elevated);
+    --muted-foreground: var(--foreground-muted);
+
+    --accent: var(--electric-blue-600);
+    --accent-foreground: var(--foreground);
+
+    --destructive: var(--error);
+    --destructive-foreground: var(--foreground);
+
+    --border: 220 13% 91%;
+    --input: var(--background-elevated);
+    --ring: var(--electric-blue-500);
+
+    /* Sidebar Colors */
+    --sidebar-background: var(--background-secondary);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--electric-blue-500);
+    --sidebar-primary-foreground: var(--foreground);
+    --sidebar-accent: var(--electric-blue-600);
+    --sidebar-accent-foreground: var(--foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--electric-blue-500);
+
+    /* Lighter shadows for light mode */
+    --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.1);
+    --shadow-sm: 0 2px 8px 0 hsl(0 0% 0% / 0.15);
+    --shadow-md: 0 4px 16px 0 hsl(0 0% 0% / 0.2);
+    --shadow-lg: 0 8px 32px 0 hsl(0 0% 0% / 0.25);
+    --shadow-xl: 0 12px 48px 0 hsl(0 0% 0% / 0.3);
+    --shadow-2xl: 0 20px 64px 0 hsl(0 0% 0% / 0.35);
+
+    /* Colored shadows for light mode */
+    --shadow-blue-sm: 0 4px 12px 0 hsl(var(--electric-blue-500) / 0.15);
+    --shadow-blue-md: 0 8px 24px 0 hsl(var(--electric-blue-500) / 0.2);
+    --shadow-blue-lg: 0 12px 40px 0 hsl(var(--electric-blue-500) / 0.25);
+
+    /* Glow effects for light mode */
+    --glow-blue-subtle: 0 0 20px hsl(var(--electric-blue-500) / 0.25);
+    --glow-blue-medium: 0 0 30px hsl(var(--electric-blue-500) / 0.35);
+    --glow-cyan-subtle: 0 0 20px hsl(var(--cyan-500) / 0.2);
+  }
+}
+
+@layer utilities {
+  /* ===== BLACKISH-BLUE GRADIENT UTILITIES ===== */
+
+  .gradient-blue-main {
+    background: var(--gradient-blue-main);
+  }
+
+  .gradient-blue-button {
+    background: var(--gradient-blue-button);
+  }
+
+  .gradient-blue-dark {
+    background: var(--gradient-blue-dark);
+  }
+
+  .gradient-blue-light {
+    background: var(--gradient-blue-light);
+  }
+
+  .gradient-blue-vertical {
+    background: var(--gradient-blue-vertical);
+  }
+
+  .gradient-black-to-blue {
+    background: var(--gradient-black-to-blue);
+  }
+
+  .gradient-card-subtle {
+    background: var(--gradient-card-subtle);
+  }
+
+  .gradient-page-full {
+    background: var(--gradient-page-full);
+  }
+
+  .gradient-mesh {
+    background: var(--gradient-mesh);
+  }
+
+  /* Animated gradients */
+  .gradient-blue-flowing {
+    background: var(--gradient-blue-flowing);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  .gradient-premium-flow {
+    background: var(--gradient-premium-flow);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  /* Legacy gradients for compatibility */
+  .gradient-primary {
+    background: var(--gradient-blue-button);
+  }
+
+  .gradient-accent {
+    background: var(--gradient-blue-main);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-black-to-blue);
+  }
+
+  /* ===== GLASSMORPHISM EFFECTS ===== */
+
+  .glass-dark {
+    background: hsl(var(--background-card) / 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-blue-light);
+  }
+
+  .glass-medium {
+    background: hsl(var(--background-elevated) / 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-default);
+  }
+
+  .glass-light {
+    background: hsl(var(--background-elevated) / 0.5);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-blue-medium);
+  }
+
+  .glass-blue-tinted {
+    background: hsl(var(--electric-blue-500) / 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-blue-light);
+  }
+
+  /* ===== GLOW & SHADOW EFFECTS ===== */
+
+  .glow-blue-subtle {
+    box-shadow: var(--glow-blue-subtle);
+  }
+
+  .glow-blue-medium {
+    box-shadow: var(--glow-blue-medium);
+  }
+
+  .glow-blue-strong {
+    box-shadow: var(--glow-blue-strong);
+  }
+
+  .glow-blue-intense {
+    box-shadow: var(--glow-blue-intense);
+  }
+
+  .glow-cyan-subtle {
+    box-shadow: var(--glow-cyan-subtle);
+  }
+
+  .glow-cyan-medium {
+    box-shadow: var(--glow-cyan-medium);
+  }
+
+  .glow-cyan-strong {
+    box-shadow: var(--glow-cyan-strong);
+  }
+
+  .glow-premium {
+    box-shadow: var(--glow-premium);
+  }
+
+  /* Legacy glow effects */
+  .glow-primary {
+    box-shadow: var(--glow-blue-medium);
+  }
+
+  .glow-accent {
+    box-shadow: var(--glow-cyan-medium);
+  }
+
+  /* Shadow utilities */
+  .shadow-blue-sm {
+    box-shadow: var(--shadow-blue-sm);
+  }
+
+  .shadow-blue-md {
+    box-shadow: var(--shadow-blue-md);
+  }
+
+  .shadow-blue-lg {
+    box-shadow: var(--shadow-blue-lg);
+  }
+
+  .shadow-cyan-sm {
+    box-shadow: var(--shadow-cyan-sm);
+  }
+
+  .shadow-cyan-md {
+    box-shadow: var(--shadow-cyan-md);
+  }
+
+  /* ===== INTERACTION EFFECTS ===== */
+
+  .hover-scale {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  .hover-lift {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-indigo-md);
+  }
+
+  .hover-glow-indigo {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-glow-indigo:hover {
+    box-shadow: var(--glow-indigo);
+  }
+
+  .hover-glow-gold {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-glow-gold:hover {
+    box-shadow: var(--glow-gold);
+  }
+
+  /* ===== PREMIUM COMPONENT STYLES ===== */
+
+  .premium-button {
+    background: var(--gradient-premium-combo);
+    color: white;
+    box-shadow: var(--glow-premium);
+    transition: var(--transition-smooth);
+  }
+
+  .premium-button:hover {
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 0 40px hsl(var(--gold-600) / 0.5), 0 0 60px hsl(var(--indigo-500) / 0.3);
+  }
+
+  .premium-card {
+    background: var(--gradient-card-subtle);
+    border: 2px solid var(--border-gold);
+    box-shadow: var(--glow-gold);
+    position: relative;
+  }
+
+  .premium-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-premium-combo);
+    opacity: 0.05;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .premium-badge {
+    background: var(--gradient-gold-pure);
+    color: hsl(var(--background));
+    box-shadow: var(--glow-gold);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .premium-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shine 3s infinite;
+  }
+
+  /* ===== BORDER UTILITIES ===== */
+
+  .border-indigo {
+    border-color: var(--border-indigo);
+  }
+
+  .border-gold {
+    border-color: var(--border-gold);
+  }
+
+  .border-subtle {
+    border-color: var(--border-subtle);
+  }
+
+  /* ===== TEXT UTILITIES ===== */
+
+  .text-indigo-light {
+    color: hsl(var(--indigo-400));
+  }
+
+  .text-indigo-primary {
+    color: hsl(var(--indigo-500));
+  }
+
+  .text-gold-primary {
+    color: hsl(var(--gold-600));
+  }
+
+  .text-gold-light {
+    color: hsl(var(--gold-500));
+  }
+
+  /* ===== ANIMATIONS ===== */
+
+  @keyframes shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes glow-pulse-indigo {
+    0%, 100% { box-shadow: var(--glow-indigo); }
+    50% { box-shadow: var(--glow-indigo-strong); }
+  }
+
+  @keyframes glow-pulse-gold {
+    0%, 100% { box-shadow: var(--glow-gold); }
+    50% { box-shadow: var(--glow-gold-strong); }
+  }
+
+  @keyframes glow-pulse-premium {
+    0%, 100% { box-shadow: var(--glow-premium); }
+    50% { box-shadow: 0 0 50px hsl(var(--gold-600) / 0.6), 0 0 70px hsl(var(--indigo-500) / 0.3); }
+  }
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(var(--electric-blue-500) / 0.5);
+    }
+    50% {
+      box-shadow: 0 0 30px hsl(var(--electric-blue-500) / 0.8), 0 0 40px hsl(var(--cyan-500) / 0.4);
+    }
+  }
+
+  .animate-glow-pulse-indigo {
+    animation: glow-pulse-indigo 2s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse-gold {
+    animation: glow-pulse-gold 2s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse-premium {
+    animation: glow-pulse-premium 3s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .transform-gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
