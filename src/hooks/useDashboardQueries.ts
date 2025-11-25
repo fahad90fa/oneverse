@@ -148,7 +148,7 @@ export const useDashboardQueries = () => {
             supabase.from('gigs').select('*').eq('worker_id', workerId),
             supabase.from('projects').select('*').eq('worker_id', workerId),
             supabase.from('reviews').select('*').eq('reviewee_id', workerId),
-            supabase.from('payments').select('*').eq('worker_id', workerId),
+            supabase.from('payments').select('*').eq('user_id', workerId),
           ]);
 
           const gigs = (gigsRes.data as Record<string, unknown>[] | null) || [];

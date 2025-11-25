@@ -175,10 +175,14 @@ const WorkerDashboard = () => {
       const { data: paymentsData } = await supabase
         .from('payments')
         .select('*')
-        .eq('worker_id', workerId)
+        .eq('user_id', workerId)
         .gte('created_at', new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString());
 
-      if (!paymentsData) return;
+      if (!paymentsData) {
+        setEarningsData([]);
+        setEarningsByCategory([]);
+        return;
+      }
 
       const monthlyEarnings: Record<string, number> = {};
       const categoryEarnings: Record<string, number> = {};
@@ -206,7 +210,8 @@ const WorkerDashboard = () => {
       setEarningsData(earnings);
       setEarningsByCategory(categories);
     } catch (error) {
-      console.error('Error fetching earnings:', error);
+      setEarningsData([]);
+      setEarningsByCategory([]);
     }
   };
 
@@ -259,7 +264,7 @@ const WorkerDashboard = () => {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('skills')
+        .select('*')
         .eq('user_id', workerId)
         .single();
 
@@ -277,7 +282,6 @@ const WorkerDashboard = () => {
         ]);
       }
     } catch (error) {
-      console.error('Error fetching skills:', error);
       setSkillsData([
         { skill: 'Web Development', level: 90 },
         { skill: 'Design', level: 85 },
