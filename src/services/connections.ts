@@ -179,7 +179,7 @@ export const connectionService = {
     };
 
     if (error) throw error;
-    return data || [];
+    return (data as any[]) || [];
   },
 
   async getFollowing(
@@ -206,7 +206,7 @@ export const connectionService = {
     };
 
     if (error) throw error;
-    return data || [];
+    return (data as any[]) || [];
   },
 
   async getFollowerCount(userId: string): Promise<number> {
@@ -240,13 +240,14 @@ export const connectionService = {
   async getConnectionSuggestions(
     limit = 10
   ): Promise<ConnectionSuggestion[]> {
-    const { data: session } = await supabase.auth.getSession();
-    if (!session?.user?.id) return [];
+    const { data } = await supabase.auth.getSession();
+    const userId = (data?.session as any)?.user?.id;
+    if (!userId) return [];
 
-    const { data, error } = (await supabase
+    const { data: suggestions, error } = (await supabase
       .from("connection_suggestions" as never)
       .select("*")
-      .eq("user_id", session.user.id)
+      .eq("user_id", userId)
       .order("score", { ascending: false })
       .limit(limit)) as {
       data: unknown;
@@ -254,7 +255,7 @@ export const connectionService = {
     };
 
     if (error) throw error;
-    return data || [];
+    return (suggestions as ConnectionSuggestion[]) || [];
   },
 
   async dismissSuggestion(suggestionId: string): Promise<void> {
