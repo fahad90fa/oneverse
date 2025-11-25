@@ -148,11 +148,14 @@ export const analyticsService = {
 
   async saveSearch(userId: string, query: string, filters: Record<string, unknown>) {
     try {
-      return await supabase.from("saved_searches").insert({
+      return (await supabase.from("saved_searches" as never).insert({
         user_id: userId,
         query,
         filters: JSON.stringify(filters),
-      });
+      } as never)) as {
+        data: unknown;
+        error: unknown;
+      };
     } catch (error) {
       console.error("Error saving search:", error);
       throw error;
@@ -161,12 +164,15 @@ export const analyticsService = {
 
   async getRecentSearches(userId: string) {
     try {
-      const { data } = await supabase
-        .from("saved_searches")
+      const { data } = (await supabase
+        .from("saved_searches" as never)
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(10)) as {
+        data: unknown;
+        error: unknown;
+      };
 
       return data || [];
     } catch (error) {

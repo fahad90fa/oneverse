@@ -120,11 +120,18 @@ export const onboardingService = {
       if (error && error.code !== '42703') throw error;
 
       if (data.shippingAddress) {
-        await supabase.from("addresses").insert({
-          user_id: userId,
-          address: data.shippingAddress,
-          is_default: true,
-        });
+        const { error: addressError } = (await supabase
+          .from("addresses" as never)
+          .insert({
+            user_id: userId,
+            address: data.shippingAddress,
+            is_default: true,
+          } as never)) as {
+          data: unknown;
+          error: any;
+        };
+
+        if (addressError && addressError.code !== '42703') throw addressError;
       }
 
       await this.updateProfile(userId, {
@@ -142,8 +149,8 @@ export const onboardingService = {
     if (!data) return;
 
     try {
-      const { data: result, error } = await supabase
-        .from("client_preferences")
+      const { data: result, error } = (await supabase
+        .from("client_preferences" as never)
         .upsert({
           user_id: userId,
           industry: data.industry,
@@ -152,7 +159,10 @@ export const onboardingService = {
           budget_range: data.budgetRange,
           payment_method: data.paymentMethod,
           updated_at: new Date().toISOString(),
-        }, { onConflict: "user_id" });
+        } as never, { onConflict: "user_id" })) as {
+        data: unknown;
+        error: any;
+      };
 
       if (error && error.code !== '42703') throw error;
 
@@ -186,9 +196,12 @@ export const onboardingService = {
         updated_at: new Date().toISOString(),
       };
 
-      const { error: skillsError } = await supabase
-        .from("worker_skills")
-        .upsert(workerSkillsData, { onConflict: "user_id" });
+      const { error: skillsError } = (await supabase
+        .from("worker_skills" as never)
+        .upsert(workerSkillsData as never, { onConflict: "user_id" })) as {
+        data: unknown;
+        error: any;
+      };
 
       if (skillsError && skillsError.code !== '42703') throw skillsError;
 
@@ -199,9 +212,12 @@ export const onboardingService = {
           project_url: url,
         }));
 
-        const { error: portfolioError } = await supabase
-          .from("portfolio_items")
-          .insert(portfolioData);
+        const { error: portfolioError } = (await supabase
+          .from("portfolio_items" as never)
+          .insert(portfolioData as never)) as {
+          data: unknown;
+          error: any;
+        };
 
         if (portfolioError && portfolioError.code !== '42703') throw portfolioError;
       }
@@ -257,19 +273,31 @@ export const onboardingService = {
     try {
       const [sellerData, buyerData, clientData, workerData] = await Promise.all([
         (async () => {
-          const result = await supabase.from("store_settings").select("*").eq("user_id", userId).single();
+          const result = (await supabase.from("store_settings" as never).select("*").eq("user_id", userId).single()) as {
+            data: unknown;
+            error: any;
+          };
           return result.error ? { data: null } : result;
         })(),
         (async () => {
-          const result = await supabase.from("buyer_preferences").select("*").eq("user_id", userId).single();
+          const result = (await supabase.from("buyer_preferences" as never).select("*").eq("user_id", userId).single()) as {
+            data: unknown;
+            error: any;
+          };
           return result.error ? { data: null } : result;
         })(),
         (async () => {
-          const result = await supabase.from("client_preferences").select("*").eq("user_id", userId).single();
+          const result = (await supabase.from("client_preferences" as never).select("*").eq("user_id", userId).single()) as {
+            data: unknown;
+            error: any;
+          };
           return result.error ? { data: null } : result;
         })(),
         (async () => {
-          const result = await supabase.from("worker_skills").select("*").eq("user_id", userId).single();
+          const result = (await supabase.from("worker_skills" as never).select("*").eq("user_id", userId).single()) as {
+            data: unknown;
+            error: any;
+          };
           return result.error ? { data: null } : result;
         })(),
       ]);

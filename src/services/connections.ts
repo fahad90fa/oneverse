@@ -243,22 +243,27 @@ export const connectionService = {
     const { data: session } = await supabase.auth.getSession();
     if (!session?.user?.id) return [];
 
-    const { data, error } = await supabase
-      .from("connection_suggestions")
+    const { data, error } = (await supabase
+      .from("connection_suggestions" as never)
       .select("*")
       .eq("user_id", session.user.id)
       .order("score", { ascending: false })
-      .limit(limit);
+      .limit(limit)) as {
+      data: unknown;
+      error: unknown;
+    };
 
     if (error) throw error;
     return data || [];
   },
 
   async dismissSuggestion(suggestionId: string): Promise<void> {
-    const { error } = await supabase
-      .from("connection_suggestions")
+    const { error } = (await supabase
+      .from("connection_suggestions" as never)
       .delete()
-      .eq("id", suggestionId);
+      .eq("id", suggestionId)) as {
+      error: unknown;
+    };
 
     if (error) throw error;
   },
