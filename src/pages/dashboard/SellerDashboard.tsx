@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useProtectRoute } from "@/hooks/useRoleAccess";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import {
   DollarSign,
@@ -23,6 +24,7 @@ import {
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
+  useProtectRoute('seller');
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalRevenue: 0,

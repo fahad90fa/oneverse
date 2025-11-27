@@ -78,6 +78,8 @@ const BlogDetail = lazy(() => import("./pages/BlogDetail"));
 const Courses = lazy(() => import("./pages/Courses"));
 const WorkerBlogs = lazy(() => import("./pages/dashboard/WorkerBlogs"));
 const WorkerCourses = lazy(() => import("./pages/dashboard/WorkerCourses"));
+const RoleApplication = lazy(() => import("./pages/RoleApplication"));
+const AdminApprovals = lazy(() => import("./pages/AdminApprovals"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading component for Suspense fallback
@@ -167,6 +169,9 @@ const AnimatedRoutes = () => {
         <Route path="/status" element={<PageTransition><Status /></PageTransition>} />
         <Route path="/blog/:slug" element={<PageTransition><BlogDetail /></PageTransition>} />
         <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
+        <Route path="/hire" element={<PageTransition><Gigs /></PageTransition>} />
+        <Route path="/approval-role/:role" element={<PageTransition><RoleApplication /></PageTransition>} />
+        <Route path="/admin/approvals" element={<PageTransition><AdminApprovals /></PageTransition>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>

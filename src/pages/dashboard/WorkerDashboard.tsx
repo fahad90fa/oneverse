@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useProtectRoute } from "@/hooks/useRoleAccess";
 import { motion } from "framer-motion";
 import { containerVariants, itemVariants } from "@/animations/variants";
 import { useDashboardQueries } from "@/hooks/useDashboardQueries";
@@ -89,6 +90,7 @@ interface Review {
 const WorkerDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  useProtectRoute('worker');
   const [workerId, setWorkerId] = useState<string | undefined>();
   const [stats, setStats] = useState<WorkerStats>({
     gigsCreated: 0,
