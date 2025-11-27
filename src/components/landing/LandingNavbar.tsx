@@ -22,15 +22,14 @@ interface NavItem {
   label: string;
   href: string;
   icon: typeof ShoppingBag;
-  gradient?: string;
 }
 
 const publicLinks: NavItem[] = [
-  { label: "Marketplace", href: "/products", icon: ShoppingBag, gradient: "from-purple-500 via-pink-500 to-cyan-500" },
-  { label: "Hire Talent", href: "/hire", icon: Briefcase, gradient: "from-blue-500 via-cyan-500 to-emerald-400" },
-  { label: "Courses", href: "/courses", icon: BookOpen, gradient: "from-indigo-500 via-purple-500 to-pink-500" },
-  { label: "Blog", href: "/blog", icon: PenSquare, gradient: "from-amber-500 via-orange-500 to-pink-500" },
-  { label: "Careers", href: "/careers", icon: Building2, gradient: "from-rose-500 via-purple-500 to-indigo-500" },
+  { label: "Marketplace", href: "/products", icon: ShoppingBag },
+  { label: "Hire Talent", href: "/hire", icon: Briefcase },
+  { label: "Courses", href: "/courses", icon: BookOpen },
+  { label: "Blog", href: "/blog", icon: PenSquare },
+  { label: "Careers", href: "/careers", icon: Building2 },
 ];
 
 const authLinks: NavItem[] = [
@@ -77,36 +76,41 @@ const LandingNavbar = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05, duration: 0.3, ease: "easeInOut" }}
       >
-        <NavLink to={link.href} className="relative inline-block">
+        <NavLink to={link.href} className="relative inline-block group">
           <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`rounded-full ${user ? "border border-white/15" : `p-[1px] bg-gradient-to-r ${link.gradient ?? "from-primary to-primary"} shadow-[0_10px_40px_rgba(0,0,0,0.2)]`}`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="relative rounded-lg overflow-hidden"
           >
-            <div className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium bg-background/80 text-white">
+            <div className={`flex items-center gap-2 px-3.5 py-2.5 text-sm font-medium transition-all duration-300 ${
+              isActive
+                ? "bg-gradient-to-r from-indigo-500/30 to-blue-500/30 border border-indigo-400/60 text-white"
+                : "border border-white/15 hover:border-indigo-400/80 text-white/80 hover:text-white group-hover:bg-gradient-to-r group-hover:from-indigo-500/20 group-hover:to-blue-500/20"
+            }`}>
               <motion.span
-                animate={{ scale: isActive ? 1.15 : 1 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10"
+                animate={{ scale: isActive ? 1.1 : 1 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className={`inline-flex h-5 w-5 items-center justify-center transition-colors ${
+                  isActive ? "text-indigo-300" : "text-white/60 group-hover:text-indigo-300"
+                }`}
               >
                 <Icon className="h-4 w-4" />
               </motion.span>
-              <span>{link.label}</span>
+              <span className="tracking-wide">{link.label}</span>
             </div>
-          </motion.div>
-          <AnimatePresence>
+
             {isActive && (
-              <motion.span
-                layoutId="navbar-underline"
-                className="pointer-events-none absolute inset-0 rounded-full border border-white/40"
+              <motion.div
+                layoutId="navbar-glow"
+                className="pointer-events-none absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-500/10 to-blue-500/10 blur-lg"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                transition={{ duration: 0.2 }}
               />
             )}
-          </AnimatePresence>
+          </motion.div>
         </NavLink>
       </motion.div>
     );
@@ -118,42 +122,54 @@ const LandingNavbar = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="backdrop-blur-xl bg-background/70 border-b border-white/10"
+        className="backdrop-blur-xl bg-black/30 border-b border-white/5"
       >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between py-3.5">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/")}
-              className="text-lg font-black tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent"
+              className="text-lg font-black tracking-tight bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent"
             >
               OneVerse
             </motion.button>
 
-            <nav className="hidden lg:flex items-center gap-3">
+            <nav className="hidden lg:flex items-center gap-2">
               <LayoutGroup>
                 {links.map((link, index) => renderLink(link, index))}
               </LayoutGroup>
             </nav>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               {user ? (
-                <Button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => navigate("/dashboard")}
-                  className="hidden sm:inline-flex bg-gradient-to-r from-primary to-accent text-white"
+                  className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500/80 to-blue-500/80 hover:from-indigo-500 hover:to-blue-500 text-white text-sm font-medium transition-all duration-200 border border-indigo-400/30"
                 >
-                  Go to Dashboard
-                </Button>
+                  <LayoutDashboard className="h-4 w-4" />
+                  Dashboard
+                </motion.button>
               ) : (
-                <div className="hidden sm:flex items-center gap-3">
-                  <Button variant="ghost" onClick={() => navigate("/auth")}>Log In</Button>
-                  <Button
+                <div className="hidden sm:flex items-center gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => navigate("/auth")}
-                    className="bg-gradient-to-r from-purple-500 to-blue-500 text-white"
+                    className="px-4 py-2 rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-white/40 text-sm font-medium transition-all duration-200"
+                  >
+                    Log In
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => navigate("/auth")}
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500/80 to-blue-500/80 hover:from-indigo-500 hover:to-blue-500 text-white text-sm font-medium transition-all duration-200 border border-indigo-400/30"
                   >
                     Sign Up
-                  </Button>
+                  </motion.button>
                 </div>
               )}
 
@@ -161,7 +177,7 @@ const LandingNavbar = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setMenuOpen((prev) => !prev)}
-                className="lg:hidden p-2 rounded-full border border-white/20 text-white"
+                className="lg:hidden p-2 rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-white/40 transition-all duration-200"
                 aria-label="Toggle navigation"
               >
                 {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -177,27 +193,46 @@ const LandingNavbar = () => {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="lg:hidden border-t border-white/10"
+              className="lg:hidden border-t border-white/5"
             >
-              <div className="px-4 py-4 space-y-3 bg-background/90">
+              <div className="px-4 py-4 space-y-2 bg-black/20">
                 {links.map((link, index) => (
                   <div key={link.href} onClick={() => setMenuOpen(false)}>
                     {renderLink(link, index)}
                   </div>
                 ))}
 
-                {!user ? (
-                  <div className="flex flex-col gap-2">
-                    <Button variant="ghost" onClick={() => { navigate("/auth"); setMenuOpen(false); }}>Log In</Button>
-                    <Button onClick={() => { navigate("/auth"); setMenuOpen(false); }} className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-                      Create Account
-                    </Button>
-                  </div>
-                ) : (
-                  <Button onClick={() => { navigate("/dashboard"); setMenuOpen(false); }}>
-                    Dashboard
-                  </Button>
-                )}
+                <div className="pt-4 border-t border-white/10 space-y-2 mt-4">
+                  {!user ? (
+                    <>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => { navigate("/auth"); setMenuOpen(false); }}
+                        className="w-full px-4 py-2 rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-white/40 text-sm font-medium transition-all duration-200"
+                      >
+                        Log In
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => { navigate("/auth"); setMenuOpen(false); }}
+                        className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500/80 to-blue-500/80 hover:from-indigo-500 hover:to-blue-500 text-white text-sm font-medium transition-all duration-200 border border-indigo-400/30"
+                      >
+                        Create Account
+                      </motion.button>
+                    </>
+                  ) : (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => { navigate("/dashboard"); setMenuOpen(false); }}
+                      className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500/80 to-blue-500/80 hover:from-indigo-500 hover:to-blue-500 text-white text-sm font-medium transition-all duration-200 border border-indigo-400/30"
+                    >
+                      Dashboard
+                    </motion.button>
+                  )}
+                </div>
               </div>
             </motion.div>
           )}
