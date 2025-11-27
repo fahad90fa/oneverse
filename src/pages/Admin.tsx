@@ -72,22 +72,18 @@ const Admin = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return false;
 
-      const email = session.user.email || session.user.user_metadata?.email || "";
-      const fullName = session.user.user_metadata?.full_name || email;
+      const { error: rpcError } = await supabase.rpc("ensure_admin_user");
+      if (!rpcError) return true;
 
-      const { error } = await supabase
+      console.warn("RPC ensure_admin_user failed, attempting fallback", rpcError);
+
+      const { data: membership } = await supabase
         .from("admin_users")
-        .upsert(
-          {
-            user_id: session.user.id,
-            email,
-            full_name: fullName
-          },
-          { onConflict: "user_id" }
-        );
+        .select("id")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
 
-      if (error) throw error;
-      return true;
+      return Boolean(membership);
     } catch (error) {
       console.error("Failed to ensure admin access:", error);
       return false;
