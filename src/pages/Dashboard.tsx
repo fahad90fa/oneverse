@@ -120,39 +120,38 @@ const Dashboard = () => {
     );
   }
 
-  // If user has multiple roles, show quick selector
   if (userRoles.length > 1) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-3 md:p-4">
         <div className="max-w-md w-full">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <div className="text-center mb-6 md:mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Welcome back, {profile?.full_name || "User"}!
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm md:text-base text-muted-foreground">
               Select your dashboard to continue
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2 md:space-y-3">
             {roleCards
               .filter(card => userRoles.includes(card.role))
-              .map((card, index) => {
+              .map((card) => {
                 const CardIcon = card.icon;
                 return (
                   <Card
                     key={card.role}
-                    className="glass-effect border-border hover-scale cursor-pointer transition-all duration-200 hover:border-primary/50"
+                    className="glass-effect border-border hover-scale cursor-pointer transition-all duration-200 hover:border-primary/50 min-h-[60px] md:min-h-[80px] flex items-center"
                     onClick={() => navigate(`/dashboard/${card.role}`)}
                   >
-                    <div className="p-4">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center`}>
-                          <CardIcon className="h-6 w-6 text-white" />
+                    <div className="p-3 md:p-4 w-full">
+                      <div className="flex items-center gap-3 md:gap-4">
+                        <div className={`w-10 md:w-12 h-10 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center flex-shrink-0`}>
+                          <CardIcon className="h-5 w-5 md:h-6 md:w-6 text-white" />
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{card.title}</h3>
-                          <p className="text-sm text-muted-foreground">{card.description}</p>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-sm md:text-base truncate">{card.title}</h3>
+                          <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">{card.description}</p>
                         </div>
                       </div>
                     </div>
@@ -161,11 +160,11 @@ const Dashboard = () => {
               })}
           </div>
 
-          <div className="mt-8 text-center">
+          <div className="mt-6 md:mt-8 text-center">
             <Button
               variant="ghost"
               onClick={handleSignOut}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-sm md:text-base text-muted-foreground hover:text-foreground"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Sign Out
@@ -176,23 +175,22 @@ const Dashboard = () => {
     );
   }
 
-  // If user has no roles, show message
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-3 md:p-4">
       <div className="max-w-md w-full text-center">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Welcome to the Platform
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm md:text-base text-muted-foreground">
             You don't have any active roles yet. Please contact an administrator to assign roles.
           </p>
         </div>
 
-        <div className="space-y-4">
-          <div className="glass-effect border border-border rounded-lg p-6">
-            <h3 className="font-semibold mb-2">Available Roles</h3>
-            <div className="grid grid-cols-2 gap-2 text-sm">
+        <div className="space-y-3 md:space-y-4">
+          <div className="glass-effect border border-border rounded-lg p-4 md:p-6">
+            <h3 className="font-semibold text-sm md:text-base mb-2">Available Roles</h3>
+            <div className="grid grid-cols-2 gap-2 text-xs md:text-sm">
               {roleCards.map((card) => (
                 <div key={card.role} className="text-muted-foreground">
                   {card.title}
@@ -204,7 +202,7 @@ const Dashboard = () => {
           <Button
             variant="ghost"
             onClick={handleSignOut}
-            className="w-full text-muted-foreground hover:text-foreground"
+            className="w-full text-sm md:text-base text-muted-foreground hover:text-foreground"
           >
             <LogOut className="h-4 w-4 mr-2" />
             Sign Out

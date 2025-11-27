@@ -48,12 +48,12 @@ const Blog = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          className="mb-8 md:mb-12"
         >
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-5xl font-bold mb-2">Blog</h1>
-              <p className="text-xl text-muted-foreground">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 md:gap-8 mb-6 md:mb-8">
+            <div className="min-w-0">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">Blog</h1>
+              <p className="text-base md:text-xl text-muted-foreground">
                 Insights, tips, and stories from our community
               </p>
             </div>
@@ -61,16 +61,15 @@ const Blog = () => {
             {user && (
               <Button
                 onClick={() => navigate('/dashboard/worker/blogs')}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-sm md:text-base w-full md:w-auto justify-center md:justify-start"
               >
-                <Plus className="h-5 w-5" />
+                <Plus className="h-4 w-4 md:h-5 md:w-5" />
                 Write Article
               </Button>
             )}
           </div>
 
-          {/* Search and Filter */}
-          <div className="flex gap-4 mb-8">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-6 md:mb-8">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <input
@@ -78,7 +77,7 @@ const Blog = () => {
                 placeholder="Search blogs..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full pl-10 pr-4 py-2 text-sm md:text-base border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 

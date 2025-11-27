@@ -76,7 +76,6 @@ const AdvancedHero = React.memo(() => {
       mouseX.set(mouseXPos);
       mouseY.set(mouseYPos);
 
-      // Magnetic effect for the button
       if (buttonRect && isHovered) {
         const buttonCenterX = buttonRect.left + buttonRect.width / 2 - rect.left;
         const buttonCenterY = buttonRect.top + buttonRect.height / 2 - rect.top;
@@ -85,7 +84,7 @@ const AdvancedHero = React.memo(() => {
         const distanceY = mouseYPos - buttonCenterY;
         const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-        const maxDistance = 150; // Maximum distance for magnetic effect
+        const maxDistance = 150;
         const strength = Math.max(0, 1 - distance / maxDistance);
 
         springX.set(distanceX * strength * 0.3);
@@ -102,15 +101,13 @@ const AdvancedHero = React.memo(() => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative min-h-screen flex items-center overflow-hidden pt-20 md:pt-0"
       onMouseMove={handleMouseMove}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      {/* Animated Background */}
       <div className="absolute inset-0">
-        {/* Gradient Mesh */}
         <motion.div
           className="absolute inset-0 opacity-30"
           animate={prefersReducedMotion ? {} : {
@@ -124,11 +121,10 @@ const AdvancedHero = React.memo(() => {
           transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
         />
 
-        {/* Particles */}
         {Array.from({ length: 80 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full"
+            className="absolute w-1 h-1 md:w-2 md:h-2 bg-white/20 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -147,8 +143,7 @@ const AdvancedHero = React.memo(() => {
           />
         ))}
 
-        {/* Grid Overlay */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10 hidden md:block">
           <div
             className="w-full h-full"
             style={{
@@ -164,11 +159,10 @@ const AdvancedHero = React.memo(() => {
         </div>
       </div>
 
-      {/* Floating Badges */}
       {floatingBadges.map((badge, index) => (
         <motion.div
           key={index}
-          className={`absolute ${badge.position} glass-effect px-3 py-2 rounded-full text-sm font-medium`}
+          className={`absolute ${badge.position} glass-effect px-2 py-1 md:px-3 md:py-2 rounded-full text-xs md:text-sm font-medium hidden lg:block`}
           initial={{ opacity: 0, scale: 0 }}
           animate={prefersReducedMotion ? { opacity: 1, scale: 1 } : {
             opacity: 1,
@@ -191,18 +185,16 @@ const AdvancedHero = React.memo(() => {
       ))}
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-screen py-12 md:py-20">
 
-          {/* Left Side - Text Content */}
-          <div className="space-y-8">
-            {/* Main Heading */}
+          <div className="space-y-6 md:space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
               <motion.h1
-                className="text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
@@ -235,19 +227,17 @@ const AdvancedHero = React.memo(() => {
               </motion.h1>
             </motion.div>
 
-            {/* Subheading with Rotating Keywords */}
             <motion.div
-              className="space-y-4"
+              className="space-y-3 md:space-y-4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0, duration: 0.8 }}
             >
-              <div className="flex items-center gap-4 text-xl lg:text-2xl text-muted-foreground">
+              <div className="flex items-center gap-2 md:gap-4 text-base md:text-xl lg:text-2xl text-muted-foreground">
                 <span>Your all-in-one freelance marketplace</span>
               </div>
 
-              {/* Rotating Keywords */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm md:text-base">
                 <span className="text-muted-foreground">Featuring:</span>
                 <motion.div
                   key={currentKeyword}
@@ -255,25 +245,24 @@ const AdvancedHero = React.memo(() => {
                   animate={{ opacity: 1, y: 0, rotateX: 0 }}
                   exit={{ opacity: 0, y: -20, rotateX: 90 }}
                   transition={{ duration: 0.6, ease: "easeInOut" }}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 md:gap-2"
                 >
                   <motion.div
-                    className={`p-2 rounded-lg bg-gradient-to-r ${keywords[currentKeyword].color} text-white`}
+                    className={`p-1.5 md:p-2 rounded-lg bg-gradient-to-r ${keywords[currentKeyword].color} text-white`}
                     whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
-                    {React.createElement(keywords[currentKeyword].icon, { className: "h-5 w-5" })}
+                    {React.createElement(keywords[currentKeyword].icon, { className: "h-4 w-4 md:h-5 md:w-5" })}
                   </motion.div>
-                  <span className={`font-bold bg-gradient-to-r ${keywords[currentKeyword].color} bg-clip-text text-transparent`}>
+                  <span className={`font-bold bg-gradient-to-r ${keywords[currentKeyword].color} bg-clip-text text-transparent text-sm md:text-base`}>
                     {keywords[currentKeyword].text}
                   </span>
                 </motion.div>
               </div>
             </motion.div>
 
-            {/* CTA Buttons */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col sm:flex-row gap-3 md:gap-4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.3, duration: 0.8 }}
@@ -292,7 +281,7 @@ const AdvancedHero = React.memo(() => {
                 <Button
                   size="lg"
                   onClick={() => navigate("/dashboard")}
-                  className="group relative bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-6 text-lg font-semibold shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 overflow-hidden"
+                  className="group relative w-full sm:w-auto bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-4 md:px-8 py-3 md:py-6 text-sm md:text-lg font-semibold shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 overflow-hidden"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500"
@@ -305,9 +294,9 @@ const AdvancedHero = React.memo(() => {
                       ease: "easeInOut"
                     }}
                   />
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center justify-center gap-2">
                     Go to Dashboard
-                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Button>
               </motion.div>
@@ -322,17 +311,16 @@ const AdvancedHero = React.memo(() => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="glass-effect border-2 border-gradient-to-r from-purple-500 to-blue-500 px-8 py-6 text-lg font-semibold hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10 transition-all duration-300"
+                  className="group relative w-full sm:w-auto glass-effect border-2 border-gradient-to-r from-purple-500 to-blue-500 px-4 md:px-8 py-3 md:py-6 text-sm md:text-lg font-semibold hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10 transition-all duration-300"
                 >
-                  <Play className="h-5 w-5 mr-2" />
+                  <Play className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                   Watch Demo
                 </Button>
               </motion.div>
             </motion.div>
 
-            {/* Trust Indicators */}
             <motion.div
-              className="flex flex-wrap gap-3"
+              className="flex flex-wrap gap-2 md:gap-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.7, duration: 0.8 }}
@@ -344,7 +332,7 @@ const AdvancedHero = React.memo(() => {
               ].map((text, index) => (
                 <motion.div
                   key={index}
-                  className="glass-effect px-3 py-2 rounded-full text-sm font-medium"
+                  className="glass-effect px-2 md:px-3 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1.8 + index * 0.1, duration: 0.5 }}
@@ -354,9 +342,8 @@ const AdvancedHero = React.memo(() => {
               ))}
             </motion.div>
 
-            {/* Stats */}
             <motion.div
-              className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.9, duration: 0.8 }}
@@ -364,30 +351,28 @@ const AdvancedHero = React.memo(() => {
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
-                  className="glass-effect p-4 rounded-xl text-center"
+                  className="glass-effect p-2 md:p-4 rounded-xl text-center"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 2.0 + index * 0.1, duration: 0.5, type: "spring" }}
                   whileHover={{ scale: 1.05, y: -2 }}
                 >
-                  <stat.icon className="h-6 w-6 mx-auto mb-2 text-primary" />
-                  <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  <stat.icon className="h-4 w-4 md:h-6 md:w-6 mx-auto mb-1 md:mb-2 text-primary" />
+                  <div className="text-lg md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                     {stat.value}
                   </div>
-                  <div className="text-xs text-muted-foreground">{stat.label}</div>
+                  <div className="text-xs md:text-sm text-muted-foreground line-clamp-1">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
           </div>
 
-          {/* Right Side - 3D Mockup */}
           <motion.div
-            className="relative flex items-center justify-center"
+            className="relative flex items-center justify-center hidden lg:flex"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 2.0, duration: 0.8 }}
           >
-            {/* Main Mockup */}
             <motion.div
               className="relative w-full max-w-lg"
               animate={prefersReducedMotion ? {} : {
@@ -398,137 +383,37 @@ const AdvancedHero = React.memo(() => {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              style={{
-                rotateX: useMotionValue(mouseY.get() * 0.01).get(),
-                rotateY: useMotionValue(mouseX.get() * 0.01).get(),
-              }}
             >
-              {/* Mockup Frame */}
-              <div className="glass-effect p-6 rounded-2xl shadow-2xl">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  </div>
-                  <div className="text-sm font-medium">Dashboard</div>
-                </div>
-
-                {/* Content */}
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="glass-effect p-3 rounded-lg">
-                      <BarChart3 className="h-6 w-6 mb-2 text-blue-500" />
-                      <div className="text-sm font-medium">Analytics</div>
-                      <div className="text-xs text-muted-foreground">+12% growth</div>
-                    </div>
-                    <div className="glass-effect p-3 rounded-lg">
-                      <MessageSquare className="h-6 w-6 mb-2 text-green-500" />
-                      <div className="text-sm font-medium">Messages</div>
-                      <div className="text-xs text-muted-foreground">3 unread</div>
-                    </div>
-                  </div>
-
-                  <div className="glass-effect p-4 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="text-sm font-medium">Recent Activity</div>
-                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-xs">
-                        <Check className="h-3 w-3 text-green-500" />
-                        <span>Order #1234 completed</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <Check className="h-3 w-3 text-green-500" />
-                        <span>New message received</span>
-                      </div>
-                    </div>
+              <div className="relative w-80 h-96 md:w-96 md:h-full mx-auto">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-3xl"
+                  animate={prefersReducedMotion ? {} : {
+                    boxShadow: [
+                      "0 0 60px rgba(168, 85, 247, 0.3)",
+                      "0 0 100px rgba(59, 130, 246, 0.5)",
+                      "0 0 60px rgba(168, 85, 247, 0.3)"
+                    ]
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                <div className="relative z-10 w-full h-full bg-gradient-to-br from-gray-900/50 to-gray-800/50 rounded-3xl border border-white/10 flex items-center justify-center backdrop-blur-xl">
+                  <div className="text-center">
+                    <Sparkles className="h-12 w-12 md:h-16 md:w-16 text-purple-400 mx-auto mb-3 md:mb-4" />
+                    <p className="text-sm md:text-lg text-white/80 font-medium">OneVerse Platform</p>
                   </div>
                 </div>
               </div>
-
-              {/* Glowing Orb */}
-              <motion.div
-                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full blur-3xl opacity-30"
-                animate={prefersReducedMotion ? {} : {
-                  scale: [1, 1.2, 1],
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
             </motion.div>
-
-            {/* Floating UI Elements */}
-            {[
-              { icon: ShoppingBag, position: "-top-8 -left-8", color: "text-purple-500" },
-              { icon: MessageSquare, position: "-bottom-6 -right-6", color: "text-blue-500" },
-              { icon: Star, position: "top-1/2 -right-12", color: "text-yellow-500" },
-              { icon: CreditCard, position: "-bottom-8 -left-12", color: "text-green-500" },
-            ].map((element, index) => (
-              <motion.div
-                key={index}
-                className={`absolute ${element.position} glass-effect p-3 rounded-xl shadow-lg`}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={prefersReducedMotion ? { opacity: 1, scale: 1 } : {
-                  opacity: 1,
-                  scale: 1,
-                  y: [0, -15, 0],
-                  rotate: [0, 5, -5, 0],
-                }}
-                transition={{
-                  delay: 2.3 + index * 0.1,
-                  duration: 0.6,
-                  y: {
-                    duration: 3 + Math.random() * 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  },
-                  rotate: {
-                    duration: 4 + Math.random() * 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }
-                }}
-                whileHover={{ scale: 1.2 }}
-              >
-                <element.icon className={`h-6 w-6 ${element.color}`} />
-              </motion.div>
-            ))}
           </motion.div>
         </div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3.0, duration: 0.8 }}
-      >
-        <motion.div
-          animate={prefersReducedMotion ? {} : {
-            y: [0, 10, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          <ChevronDown className="h-6 w-6 text-muted-foreground" />
-        </motion.div>
-        <span className="text-sm text-muted-foreground">Scroll to explore</span>
-      </motion.div>
     </motion.section>
   );
 });
 
-AdvancedHero.displayName = 'AdvancedHero';
-
+AdvancedHero.displayName = "AdvancedHero";
 export default AdvancedHero;

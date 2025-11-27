@@ -66,12 +66,12 @@ const Courses = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          className="mb-8 md:mb-12"
         >
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-5xl font-bold mb-2">Courses</h1>
-              <p className="text-xl text-muted-foreground">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 md:gap-8 mb-6 md:mb-8">
+            <div className="min-w-0">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">Courses</h1>
+              <p className="text-base md:text-xl text-muted-foreground">
                 Learn new skills from industry experts
               </p>
             </div>
@@ -79,9 +79,9 @@ const Courses = () => {
             {user && (
               <Button
                 onClick={() => navigate('/dashboard/worker/courses')}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-sm md:text-base w-full md:w-auto justify-center md:justify-start"
               >
-                <Plus className="h-5 w-5" />
+                <Plus className="h-4 w-4 md:h-5 md:w-5" />
                 Create Course
               </Button>
             )}

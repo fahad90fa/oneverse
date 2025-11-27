@@ -120,36 +120,35 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background effects */}
+    <div className="min-h-screen bg-background flex items-center justify-center p-3 md:p-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient-shift bg-[length:200%_200%]" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/30 rounded-full blur-3xl animate-float" style={{ animationDelay: "1s" }} />
+      <div className="absolute top-20 left-10 w-48 md:w-72 h-48 md:h-72 bg-primary/30 rounded-full blur-3xl animate-float hidden md:block" />
+      <div className="absolute bottom-20 right-10 w-64 md:w-96 h-64 md:h-96 bg-accent/30 rounded-full blur-3xl animate-float hidden md:block" style={{ animationDelay: "1s" }} />
 
       <div className="w-full max-w-md relative z-10">
         <Button
           variant="ghost"
           onClick={() => navigate("/")}
-          className="mb-4 glass-effect"
+          className="mb-3 md:mb-4 glass-effect text-sm md:text-base"
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-2 h-3 w-3 md:h-4 md:w-4" />
           Back to Home
         </Button>
 
         <Card className="glass-effect border-border animate-scale-in">
-          <div className="p-8 space-y-6">
-            <div className="text-center space-y-2">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <div className="p-4 md:p-8 space-y-4 md:space-y-6">
+            <div className="text-center space-y-1 md:space-y-2">
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 {isSignUp ? "Create Account" : "Welcome Back"}
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-sm md:text-base text-muted-foreground">
                 {isSignUp
                   ? "Join our multi-purpose platform"
                   : "Sign in to your account"}
               </p>
             </div>
 
-            <form onSubmit={handleAuth} className="space-y-4">
+            <form onSubmit={handleAuth} className="space-y-3 md:space-y-4">
               {isSignUp && (
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name</Label>
@@ -192,29 +191,30 @@ const Auth = () => {
               </div>
 
               {isSignUp && (
-                <div className="space-y-3">
-                  <Label>Select Your Roles (choose at least one)</Label>
-                  <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2 md:space-y-3">
+                  <Label className="text-sm md:text-base">Select Your Roles (choose at least one)</Label>
+                  <div className="grid grid-cols-2 gap-2 md:gap-3">
                     {roles.map((role) => (
                       <label
                         key={role.value}
-                        className={`glass-effect border-2 rounded-lg p-3 cursor-pointer transition-all hover-scale ${
+                        className={`glass-effect border-2 rounded-lg p-2 md:p-3 cursor-pointer transition-all hover-scale min-h-[80px] md:min-h-[100px] flex items-center ${
                           selectedRoles.includes(role.value)
                             ? "border-primary bg-primary/10"
                             : "border-border"
                         }`}
                       >
-                        <div className="flex items-start space-x-2">
+                        <div className="flex items-start space-x-2 w-full">
                           <Checkbox
                             checked={selectedRoles.includes(role.value)}
                             onCheckedChange={() => toggleRole(role.value)}
+                            className="mt-0.5"
                           />
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <role.icon className="h-4 w-4" />
-                              <span className="font-medium text-sm">{role.label}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1 md:gap-2 mb-0.5 md:mb-1">
+                              <role.icon className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                              <span className="font-medium text-xs md:text-sm truncate">{role.label}</span>
                             </div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground line-clamp-2">
                               {role.description}
                             </p>
                           </div>
@@ -227,14 +227,14 @@ const Auth = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-primary-foreground"
+                className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 text-primary-foreground text-sm md:text-base py-2 md:py-3 min-h-[44px]"
                 disabled={loading}
               >
                 {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
               </Button>
             </form>
 
-            <div className="text-center text-sm">
+            <div className="text-center text-xs md:text-sm">
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
                 className="text-primary hover:underline"

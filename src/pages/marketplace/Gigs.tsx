@@ -103,56 +103,57 @@ const Gigs = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
+      <div className="container mx-auto px-4 py-6 md:py-8">
+        <div className="mb-6 md:mb-8">
           <Button
             variant="ghost"
             onClick={() => navigateWithAuth("/dashboard", "Log in to access your dashboard")}
-            className="glass-effect mb-4"
+            className="glass-effect mb-3 md:mb-4 text-sm md:text-base"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            <ArrowLeft className="mr-2 h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">Back to Dashboard</span>
+            <span className="sm:hidden">Back</span>
           </Button>
 
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent animate-fade-in-up">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent animate-fade-in-up">
             Freelance Services
           </h1>
 
-          {/* Search and Filter */}
-          <div className="flex gap-4 mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               <Input
                 placeholder="Search services..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 glass-effect border-border"
+                className="pl-10 glass-effect border-border text-sm md:text-base"
               />
             </div>
-            <Button className="glass-effect">
+            <Button className="glass-effect text-sm md:text-base px-3 md:px-4 py-2 md:py-2.5">
               <Filter className="mr-2 h-4 w-4" />
-              Filters
+              <span className="hidden sm:inline">Filters</span>
+              <span className="sm:hidden">Filter</span>
             </Button>
           </div>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[...Array(6)].map((_, i) => (
               <Card key={i} className="glass-effect border-border overflow-hidden">
-                <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 animate-pulse" />
-                <div className="p-4 space-y-3">
+                <div className="h-40 md:h-48 bg-gradient-to-br from-primary/10 to-accent/10 animate-pulse" />
+                <div className="p-3 md:p-4 space-y-3">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="h-8 w-8 bg-muted/50 rounded-full animate-pulse" />
-                    <div className="h-4 bg-muted/50 rounded animate-pulse w-24" />
+                    <div className="h-6 md:h-8 w-6 md:w-8 bg-muted/50 rounded-full animate-pulse" />
+                    <div className="h-3 md:h-4 bg-muted/50 rounded animate-pulse w-24" />
                   </div>
-                  <div className="h-5 bg-muted/50 rounded animate-pulse w-3/4" />
-                  <div className="h-4 bg-muted/50 rounded animate-pulse w-full" />
+                  <div className="h-4 md:h-5 bg-muted/50 rounded animate-pulse w-3/4" />
+                  <div className="h-3 md:h-4 bg-muted/50 rounded animate-pulse w-full" />
                   <div className="flex justify-between items-center pt-2">
-                    <div className="h-6 bg-muted/50 rounded animate-pulse w-16" />
+                    <div className="h-5 md:h-6 bg-muted/50 rounded animate-pulse w-16" />
                     <div className="flex gap-1">
                       {[...Array(5)].map((_, starIndex) => (
-                        <div key={starIndex} className="h-4 w-4 bg-muted/50 rounded animate-pulse" />
+                        <div key={starIndex} className="h-3 md:h-4 w-3 md:w-4 bg-muted/50 rounded animate-pulse" />
                       ))}
                     </div>
                   </div>
@@ -161,22 +162,22 @@ const Gigs = () => {
             ))}
           </div>
         ) : filteredGigs.length === 0 ? (
-          <Card className="glass-effect border-border p-12 text-center animate-fade-in-up">
-            <Wrench className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <h3 className="text-2xl font-bold mb-2">No Services Found</h3>
-            <p className="text-muted-foreground mb-6">
+          <Card className="glass-effect border-border p-6 md:p-12 text-center animate-fade-in-up">
+            <Wrench className="h-12 md:h-16 w-12 md:w-16 mx-auto mb-3 md:mb-4 text-muted-foreground" />
+            <h3 className="text-xl md:text-2xl font-bold mb-2">No Services Found</h3>
+            <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
               {searchTerm ? "Try adjusting your search" : "Be the first to offer a service!"}
             </p>
             {!searchTerm && (
               viewer ? (
                 <CreateGigModal>
-                  <Button className="bg-gradient-to-r from-pink-500 to-purple-500">
+                  <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-sm md:text-base">
                     Create Your Gig
                   </Button>
                 </CreateGigModal>
               ) : (
                 <Button
-                  className="bg-gradient-to-r from-pink-500 to-purple-500"
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 text-sm md:text-base"
                   onClick={() => requireAuth("Please log in to post a gig")}
                 >
                   Create Your Gig
@@ -185,7 +186,7 @@ const Gigs = () => {
             )}
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredGigs.map((gig, index) => (
               <Card
                 key={gig.id}
