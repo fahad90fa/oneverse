@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { Shield, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
 
 interface AdminLoginModalProps {
@@ -31,6 +32,29 @@ const AdminLoginModal = ({ isOpen, onClose, onSuccess }: AdminLoginModalProps) =
     }
   }, [isOpen]);
 
+  const ensureAdminAccess = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+
+      const email = session.user.email || session.user.user_metadata?.email || "";
+      const fullName = session.user.user_metadata?.full_name || email;
+
+      await supabase
+        .from("admin_users")
+        .upsert(
+          {
+            user_id: session.user.id,
+            email,
+            full_name: fullName,
+          },
+          { onConflict: "user_id" }
+        );
+    } catch (error) {
+      console.error("Failed to ensure admin access", error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -49,6 +73,7 @@ const AdminLoginModal = ({ isOpen, onClose, onSuccess }: AdminLoginModalProps) =
     await new Promise(resolve => setTimeout(resolve, 800));
 
     if (password === correctPassword) {
+      await ensureAdminAccess();
       localStorage.setItem('admin_password', password);
       toast({
         title: "Access granted",
