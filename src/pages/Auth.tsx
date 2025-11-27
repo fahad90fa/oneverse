@@ -90,7 +90,9 @@ const Auth = () => {
             title: "Account created!",
             description: "Let's set up your profile"
           });
-          navigate("/onboarding");
+          const requiresVerification = selectedRoles.includes("worker") && selectedRoles.includes("seller");
+          const allRolesSelected = selectedRoles.length === roles.length;
+          navigate(requiresVerification || allRolesSelected ? "/verification" : "/onboarding");
         }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
