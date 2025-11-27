@@ -1,4 +1,3 @@
-import { apiService } from './api';
 import { supabase } from '../integrations/supabase/client';
 
 export interface UploadOptions {
@@ -7,14 +6,38 @@ export interface UploadOptions {
   uploadType: string;
 }
 
-const uploadConfigs: Record<string, { maxSize: number; allowed: string[] }> = {
+type UploadConfig = {
+  maxSize: number;
+  allowed: string[];
+};
+
+type UploadTarget = {
+  bucket: string;
+  folder: string;
+};
+
+const uploadConfigs: Record<string, UploadConfig> = {
   profile_picture: {
     maxSize: 5 * 1024 * 1024,
     allowed: ['image/jpeg', 'image/png', 'image/gif']
   },
   project_file: {
     maxSize: 50 * 1024 * 1024,
-    allowed: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain']
+    allowed: [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain'
+    ]
+  },
+  'project-files': {
+    maxSize: 50 * 1024 * 1024,
+    allowed: [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain'
+    ]
   },
   product_image: {
     maxSize: 10 * 1024 * 1024,
@@ -28,14 +51,51 @@ const uploadConfigs: Record<string, { maxSize: number; allowed: string[] }> = {
     maxSize: 10 * 1024 * 1024,
     allowed: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
   },
-  'project-files': {
-    maxSize: 50 * 1024 * 1024,
-    allowed: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain']
-  },
   verification: {
     maxSize: 15 * 1024 * 1024,
     allowed: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
   }
+};
+
+const uploadTargets: Record<string, UploadTarget> = {
+  profile_picture: { bucket: 'documents', folder: 'profiles' },
+  project_file: { bucket: 'documents', folder: 'project-files' },
+  'project-files': { bucket: 'documents', folder: 'project-files' },
+  product_image: { bucket: 'documents', folder: 'products' },
+  portfolio_image: { bucket: 'documents', folder: 'portfolio' },
+  posts: { bucket: 'documents', folder: 'posts' },
+  verification: { bucket: 'documents', folder: 'verifications' }
+};
+
+const defaultTarget: UploadTarget = { bucket: 'documents', folder: 'general' };
+
+const sanitizeFileName = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9\.\-]/g, '-')
+    .replace(/-+/g, '-');
+
+const resolveUserId = async (providedId?: string) => {
+  if (providedId) return providedId;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user?.id) {
+    throw new Error('User not authenticated');
+  }
+  return session.user.id;
+};
+
+const getUploadTarget = (uploadType?: string): UploadTarget => {
+  if (!uploadType) return defaultTarget;
+  return uploadTargets[uploadType] || {
+    bucket: defaultTarget.bucket,
+    folder: sanitizeFileName(uploadType) || defaultTarget.folder
+  };
+};
+
+const buildFilePath = (folder: string, userId: string, fileName: string) => {
+  const safeName = sanitizeFileName(fileName);
+  const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return `${folder}/${userId}/${uniqueSuffix}-${safeName}`;
 };
 
 export const fileUploadService = {
@@ -43,7 +103,7 @@ export const fileUploadService = {
     try {
       let file: File | undefined;
       let uploadType: string | undefined;
-      let userId: string | undefined;
+      let providedUserId: string | undefined;
 
       if (options instanceof File) {
         file = options;
@@ -51,7 +111,7 @@ export const fileUploadService = {
       } else {
         file = options.file;
         uploadType = options.uploadType;
-        userId = options.userId;
+        providedUserId = options.userId;
       }
 
       if (!file) {
@@ -62,27 +122,48 @@ export const fileUploadService = {
         throw new Error('No upload type provided');
       }
 
-      if (!userId) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user?.id) {
-          throw new Error('User not authenticated');
-        }
-        userId = session.user.id;
-      }
+      const userId = await resolveUserId(providedUserId);
+      const target = getUploadTarget(uploadType);
+      const filePath = buildFilePath(target.folder, userId, file.name);
 
       this.validateFile(file, uploadType);
 
-      return apiService.uploadFile(file, userId, uploadType);
+      const { error } = await supabase.storage
+        .from(target.bucket)
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: file.type
+        });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const { data: publicData } = supabase.storage
+        .from(target.bucket)
+        .getPublicUrl(filePath);
+
+      const publicUrl = publicData?.publicUrl || '';
+
+      return {
+        url: publicUrl,
+        file_url: publicUrl,
+        file_name: file.name,
+        file_path: filePath,
+        bucket: target.bucket
+      };
     } catch (error) {
       console.error('Error uploading file:', error);
       throw error;
     }
   },
 
-  async uploadMultipleFiles(files: File[], userId: string, uploadType: string) {
+  async uploadMultipleFiles(files: File[], uploadType: string, userId?: string) {
     try {
+      const resolvedUserId = await resolveUserId(userId);
       const uploadPromises = files.map(file =>
-        this.uploadFile({ file, userId, uploadType })
+        this.uploadFile({ file, userId: resolvedUserId, uploadType })
       );
 
       const results = await Promise.all(uploadPromises);
@@ -101,12 +182,13 @@ export const fileUploadService = {
     }
   },
 
-  async deleteFile(fileId: string) {
+  async deleteFile(path: string, bucket = defaultTarget.bucket) {
     try {
-      const response = await fetch(`http://localhost:3000/api/uploads/${fileId}`, {
-        method: 'DELETE'
-      });
-      return await response.json();
+      if (!path) return;
+      const { error } = await supabase.storage.from(bucket).remove([path]);
+      if (error) {
+        throw new Error(error.message);
+      }
     } catch (error) {
       console.error('Error deleting file:', error);
       throw error;
@@ -115,13 +197,29 @@ export const fileUploadService = {
 
   async getUserFiles(userId: string, uploadType?: string) {
     try {
-      let url = `http://localhost:3000/api/uploads/${userId}`;
-      if (uploadType) {
-        url += `?uploadType=${uploadType}`;
+      const resolvedUserId = await resolveUserId(userId);
+      const target = getUploadTarget(uploadType);
+      const prefix = `${target.folder}/${resolvedUserId}`;
+
+      const { data, error } = await supabase.storage
+        .from(target.bucket)
+        .list(prefix, { limit: 100 });
+
+      if (error) {
+        throw new Error(error.message);
       }
 
-      const response = await fetch(url);
-      return await response.json();
+      return (data || []).map(file => {
+        const filePath = `${prefix}/${file.name}`;
+        const { data: publicData } = supabase.storage
+          .from(target.bucket)
+          .getPublicUrl(filePath);
+        return {
+          ...file,
+          path: filePath,
+          url: publicData?.publicUrl || ''
+        };
+      });
     } catch (error) {
       console.error('Error fetching user files:', error);
       throw error;
@@ -139,7 +237,9 @@ export const fileUploadService = {
   },
 
   validateFile(file: File, uploadType: string) {
-    const normalizedType = uploadConfigs[uploadType] ? uploadType : uploadType.replace('-', '_');
+    const normalizedType = uploadConfigs[uploadType]
+      ? uploadType
+      : uploadType.replace('-', '_');
     const config = uploadConfigs[normalizedType] || uploadConfigs[uploadType];
 
     if (!config) {
