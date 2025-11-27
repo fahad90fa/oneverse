@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useBlogQueries } from '@/hooks/useBlogQueries';
 import BlogDetailComponent from '@/components/Blog/BlogDetail';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 
@@ -14,6 +15,15 @@ const BlogDetailPage = () => {
   const { data: blog, isLoading: blogLoading } = useBlogBySlug(slug || '');
   const { data: comments = [] } = useBlogComments(blog?.id || '');
   const [user, setUser] = useState<User | null>(null);
+
+  const promptLogin = (description: string) => {
+    toast({
+      title: 'Login required',
+      description,
+      variant: 'destructive'
+    });
+    navigate('/auth');
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -48,7 +58,12 @@ const BlogDetailPage = () => {
   }
 
   const handleComment = (content: string) => {
-    if (user && blog.id) {
+    if (!user) {
+      promptLogin('Please log in to comment on this post');
+      return;
+    }
+
+    if (blog?.id) {
       addCommentMutation.mutate({
         blog_id: blog.id,
         user_id: user.id,
@@ -86,6 +101,8 @@ const BlogDetailPage = () => {
             }
           }}
           isLoading={addCommentMutation.isPending}
+          canInteract={!!user}
+          onRequireAuth={() => promptLogin('Please log in to engage with this post')}
         />
       </div>
     </div>

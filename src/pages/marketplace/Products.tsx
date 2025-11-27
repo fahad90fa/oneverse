@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useWishlist } from "@/hooks/useWishlist";
+import { toast } from "@/hooks/use-toast";
+import type { User } from "@supabase/supabase-js";
 import {
   ShoppingCart,
   Heart,
@@ -20,10 +22,33 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [viewer, setViewer] = useState<User | null>(null);
   const { addToWishlist, removeFromWishlist, isInWishlist, getWishlistItem } = useWishlist();
 
   useEffect(() => {
     fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (mounted) {
+        setViewer(session?.user ?? null);
+      }
+    };
+
+    loadSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setViewer(session?.user ?? null);
+    });
+
+    return () => {
+      mounted = false;
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
 
   const fetchProducts = async () => {
@@ -43,6 +68,35 @@ const Products = () => {
     }
   };
 
+  const requireAuth = (description: string) => {
+    if (viewer) {
+      return true;
+    }
+
+    toast({
+      title: "Login required",
+      description,
+      variant: "destructive",
+    });
+
+    navigate("/auth");
+    return false;
+  };
+
+  const navigateWithAuth = (path: string, description: string) => {
+    if (!requireAuth(description)) return;
+    navigate(path);
+  };
+
+  const handleAddToCart = (product: Product) => {
+    if (!requireAuth("Please log in to purchase products")) return;
+
+    toast({
+      title: "Added to cart",
+      description: `${product.title} is ready for checkout`,
+    });
+  };
+
   const filteredProducts = products.filter(product =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.description?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -54,7 +108,7 @@ const Products = () => {
         <div className="mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigateWithAuth("/dashboard", "Log in to access your dashboard")}
             className="glass-effect mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -108,7 +162,10 @@ const Products = () => {
               {searchTerm ? "Try adjusting your search" : "Be the first to list a product!"}
             </p>
             {!searchTerm && (
-              <Button className="bg-gradient-to-r from-primary to-blue-500">
+              <Button
+                className="bg-gradient-to-r from-primary to-blue-500"
+                onClick={() => navigateWithAuth("/products/new", "Please log in to list a product")}
+              >
                 List Your Product
               </Button>
             )}
@@ -135,6 +192,10 @@ const Products = () => {
                     }`}
                     onClick={async (e) => {
                       e.stopPropagation();
+                      if (!isInWishlist(product.id) && !requireAuth("Please log in to manage your wishlist")) {
+                        return;
+                      }
+
                       if (isInWishlist(product.id)) {
                         const wishlistItem = getWishlistItem(product.id);
                         if (wishlistItem) {
@@ -170,7 +231,14 @@ const Products = () => {
                     <span className="text-2xl font-bold text-primary">
                       ${parseFloat(product.price).toFixed(2)}
                     </span>
-                    <Button size="sm" className="bg-gradient-to-r from-primary to-blue-500">
+                    <Button
+                      size="sm"
+                      className="bg-gradient-to-r from-primary to-blue-500"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                    >
                       <ShoppingCart className="h-4 w-4 mr-1" />
                       Add
                     </Button>

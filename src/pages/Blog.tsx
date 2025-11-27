@@ -6,6 +6,7 @@ import { useBlogQueries } from '@/hooks/useBlogQueries';
 import BlogCard from '@/components/Blog/BlogCard';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import type { User } from '@supabase/supabase-js';
 
 const Blog = () => {
@@ -15,6 +16,15 @@ const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+
+  const promptLogin = (description: string) => {
+    toast({
+      title: 'Login required',
+      description,
+      variant: 'destructive'
+    });
+    navigate('/auth');
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -123,7 +133,9 @@ const Blog = () => {
               {searchTerm ? 'No blogs found matching your search' : 'No blogs published yet'}
             </p>
             {!searchTerm && !user && (
-              <Button onClick={() => navigate('/auth')}>Create Your First Blog</Button>
+              <Button onClick={() => promptLogin('Please log in to publish a blog')}>
+                Create Your First Blog
+              </Button>
             )}
           </motion.div>
         )}

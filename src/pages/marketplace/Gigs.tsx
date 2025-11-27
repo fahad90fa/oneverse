@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { toast } from "@/hooks/use-toast";
+import type { User } from "@supabase/supabase-js";
 import {
   Wrench,
   Clock,
@@ -22,9 +24,32 @@ const Gigs = () => {
   const [gigs, setGigs] = useState<Gig[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [viewer, setViewer] = useState<User | null>(null);
 
   useEffect(() => {
     fetchGigs();
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (mounted) {
+        setViewer(session?.user ?? null);
+      }
+    };
+
+    loadSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setViewer(session?.user ?? null);
+    });
+
+    return () => {
+      mounted = false;
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
 
   const fetchGigs = async () => {
@@ -47,6 +72,30 @@ const Gigs = () => {
     }
   };
 
+  const requireAuth = (description: string) => {
+    if (viewer) {
+      return true;
+    }
+
+    toast({
+      title: "Login required",
+      description,
+      variant: "destructive",
+    });
+    navigate("/auth");
+    return false;
+  };
+
+  const navigateWithAuth = (path: string, description: string) => {
+    if (!requireAuth(description)) return;
+    navigate(path);
+  };
+
+  const handleContactWorker = (gig: Gig) => {
+    if (!requireAuth("Please log in to contact workers")) return;
+    navigate(`/gig/${gig.id}`);
+  };
+
   const filteredGigs = gigs.filter(gig =>
     gig.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     gig.description?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -58,7 +107,7 @@ const Gigs = () => {
         <div className="mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigateWithAuth("/dashboard", "Log in to access your dashboard")}
             className="glass-effect mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -119,11 +168,20 @@ const Gigs = () => {
               {searchTerm ? "Try adjusting your search" : "Be the first to offer a service!"}
             </p>
             {!searchTerm && (
-              <CreateGigModal>
-                <Button className="bg-gradient-to-r from-pink-500 to-purple-500">
+              viewer ? (
+                <CreateGigModal>
+                  <Button className="bg-gradient-to-r from-pink-500 to-purple-500">
+                    Create Your Gig
+                  </Button>
+                </CreateGigModal>
+              ) : (
+                <Button
+                  className="bg-gradient-to-r from-pink-500 to-purple-500"
+                  onClick={() => requireAuth("Please log in to post a gig")}
+                >
                   Create Your Gig
                 </Button>
-              </CreateGigModal>
+              )
             )}
           </Card>
         ) : (
@@ -186,6 +244,16 @@ const Gigs = () => {
                       </p>
                     </div>
                   </div>
+
+                  <Button
+                    className="w-full mt-4 bg-gradient-to-r from-pink-500 to-purple-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleContactWorker(gig);
+                    }}
+                  >
+                    Hire Talent
+                  </Button>
                 </div>
               </Card>
             ))}

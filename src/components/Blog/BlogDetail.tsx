@@ -12,6 +12,8 @@ interface BlogDetailProps {
   onComment?: (content: string) => void;
   onShare?: () => void;
   isLoading?: boolean;
+  canInteract?: boolean;
+  onRequireAuth?: () => void;
 }
 
 const BlogDetail = ({
@@ -21,22 +23,36 @@ const BlogDetail = ({
   onLike,
   onComment,
   onShare,
-  isLoading = false
+  isLoading = false,
+  canInteract = true,
+  onRequireAuth
 }: BlogDetailProps) => {
   const [commentText, setCommentText] = useState('');
   const [likes, setLikes] = useState(blog.likes_count || 0);
   const readingTime = Math.ceil((blog.content.split(' ').length || 0) / 200);
 
   const handleLike = () => {
+    if (!canInteract) {
+      onRequireAuth?.();
+      return;
+    }
+
     setLikes(isLiked ? likes - 1 : likes + 1);
     onLike?.();
   };
 
   const handleComment = () => {
-    if (commentText.trim()) {
-      onComment?.(commentText);
-      setCommentText('');
+    if (!commentText.trim()) {
+      return;
     }
+
+    if (!canInteract) {
+      onRequireAuth?.();
+      return;
+    }
+
+    onComment?.(commentText);
+    setCommentText('');
   };
 
   return (

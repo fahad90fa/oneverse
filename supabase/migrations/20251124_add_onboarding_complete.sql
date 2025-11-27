@@ -1,1 +1,0 @@
-ALTER TABLE profiles ADD COLUMN onboarding_complete BOOLEAN DEFAULT FALSE;

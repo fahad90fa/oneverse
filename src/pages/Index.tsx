@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/landing/ThemeToggle";
 import AdvancedHero from "@/components/landing/AdvancedHero";
+import LandingNavbar from "@/components/landing/LandingNavbar";
 import { useTheme } from "next-themes";
 
 const Index = () => {
@@ -89,6 +90,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
+      <LandingNavbar />
       <ThemeToggle />
 
       {/* Advanced Hero Section */}

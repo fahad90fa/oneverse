@@ -6,7 +6,9 @@ import { useCourseQueries } from '@/hooks/useCourseQueries';
 import CourseCard from '@/components/Course/CourseCard';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import type { User } from '@supabase/supabase-js';
+import type { CourseWithInstructor } from '@/types/course';
 
 const Courses = () => {
   const navigate = useNavigate();
@@ -38,6 +40,24 @@ const Courses = () => {
 
   const categories = Array.from(new Set(courses.map(c => c.category).filter(Boolean)));
   const levels = ['beginner', 'intermediate', 'advanced'];
+
+  const promptLogin = (description: string) => {
+    toast({
+      title: 'Login required',
+      description,
+      variant: 'destructive'
+    });
+    navigate('/auth');
+  };
+
+  const handleEnroll = (course: CourseWithInstructor) => {
+    if (!user) {
+      promptLogin('Please log in to enroll in this course');
+      return;
+    }
+
+    navigate(`/course/${course.slug}`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -168,13 +188,7 @@ const Courses = () => {
                 key={course.id}
                 course={course}
                 onClick={() => navigate(`/course/${course.slug}`)}
-                onEnroll={() => {
-                  if (!user) {
-                    navigate('/auth');
-                  } else {
-                    navigate(`/course/${course.slug}`);
-                  }
-                }}
+                onEnroll={() => handleEnroll(course)}
               />
             ))}
           </div>
@@ -190,7 +204,9 @@ const Courses = () => {
                 : 'No courses available yet'}
             </p>
             {!user && (
-              <Button onClick={() => navigate('/auth')}>Sign Up to Create a Course</Button>
+              <Button onClick={() => promptLogin('Please log in to create a course')}>
+                Sign Up to Create a Course
+              </Button>
             )}
           </motion.div>
         )}
