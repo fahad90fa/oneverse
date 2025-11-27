@@ -5,11 +5,47 @@ BEGIN
 EXCEPTION WHEN undefined_object THEN NULL;
 END $$;
 
+DO $$
+BEGIN
+  DROP POLICY IF EXISTS "Admin users can insert themselves" ON admin_users;
+EXCEPTION WHEN undefined_object THEN NULL;
+END $$;
+
 CREATE POLICY "Admin users can insert themselves"
   ON admin_users FOR INSERT TO authenticated
   WITH CHECK (auth.uid() = user_id);
 
--- Ensure admin_users entries can read admin_users table (policy already exists)
+DO $$
+BEGIN
+  DROP POLICY IF EXISTS "Admin users are viewable by admins" ON admin_users;
+EXCEPTION WHEN undefined_object THEN NULL;
+END $$;
+
+DO $$
+BEGIN
+  DROP POLICY IF EXISTS "Admin users are viewable by themselves" ON admin_users;
+EXCEPTION WHEN undefined_object THEN NULL;
+END $$;
+
+CREATE POLICY "Admin users are viewable by themselves"
+  ON admin_users FOR SELECT
+  USING (auth.uid() = user_id);
+
+DO $$
+BEGIN
+  DROP POLICY IF EXISTS "Admin users can be deleted by admins" ON admin_users;
+EXCEPTION WHEN undefined_object THEN NULL;
+END $$;
+
+DO $$
+BEGIN
+  DROP POLICY IF EXISTS "Admin users can delete themselves" ON admin_users;
+EXCEPTION WHEN undefined_object THEN NULL;
+END $$;
+
+CREATE POLICY "Admin users can delete themselves"
+  ON admin_users FOR DELETE
+  USING (auth.uid() = user_id);
 
 -- Update verification select policy to rely on admin_users membership
 DO $$

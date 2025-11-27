@@ -67,6 +67,33 @@ const Admin = () => {
 
   const [chartData, setChartData] = useState<Record<string, unknown>[]>([]);
 
+  const ensureAdminMembership = useCallback(async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return false;
+
+      const email = session.user.email || session.user.user_metadata?.email || "";
+      const fullName = session.user.user_metadata?.full_name || email;
+
+      const { error } = await supabase
+        .from("admin_users")
+        .upsert(
+          {
+            user_id: session.user.id,
+            email,
+            full_name: fullName
+          },
+          { onConflict: "user_id" }
+        );
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error("Failed to ensure admin access:", error);
+      return false;
+    }
+  }, []);
+
   const fetchDashboardData = useCallback(async () => {
     try {
       const [
@@ -161,6 +188,11 @@ const Admin = () => {
       const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'fahad123@fa';
 
       if (adminPassword === correctPassword) {
+        const hasMembership = await ensureAdminMembership();
+        if (!hasMembership) {
+          setShowLoginModal(true);
+          return;
+        }
         setIsAdmin(true);
         await fetchDashboardData();
       } else {
@@ -172,13 +204,22 @@ const Admin = () => {
     } finally {
       setLoading(false);
     }
-  }, [navigate, fetchDashboardData]);
+  }, [navigate, fetchDashboardData, ensureAdminMembership]);
 
   useEffect(() => {
     checkAdminAccessCallback();
   }, [checkAdminAccessCallback]);
 
   const handleLoginSuccess = async () => {
+    const hasMembership = await ensureAdminMembership();
+    if (!hasMembership) {
+      toast({
+        title: "Admin access error",
+        description: "Unable to verify admin privileges",
+        variant: "destructive"
+      });
+      return;
+    }
     setIsAdmin(true);
     await fetchDashboardData();
   };
