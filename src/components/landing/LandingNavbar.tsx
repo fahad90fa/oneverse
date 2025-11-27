@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/landing/ThemeToggle";
 import { NavLink } from "@/components/NavLink";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -207,6 +208,8 @@ const LandingNavbar = () => {
                 ))}
 
                 <div className="pt-4 border-t border-neutral-200 dark:border-white/10 space-y-2 mt-4">
+                  <ThemeToggle showLabel variant="inline" />
+                  
                   {!user ? (
                     <>
                       <motion.button
