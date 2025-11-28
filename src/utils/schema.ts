@@ -15,7 +15,13 @@ export const schemas = {
     "@type": "Organization",
     "name": "OneVerse",
     "url": "https://oneverse.site",
-    "logo": "https://oneverse.site/public/logo.png",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://oneverse.site/logo.png",
+      "width": 512,
+      "height": 512
+    },
+    "image": "https://oneverse.site/logo.png",
     "description": "All-in-one freelance marketplace platform for hiring talent, selling products, courses, and showcasing portfolios",
     "sameAs": [
       "https://twitter.com/oneverse",

@@ -7,35 +7,65 @@
     <lastmod>2025-11-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://oneverse.site/logo.png</image:loc>
+      <image:title>OneVerse Logo - All-In-One Marketplace</image:title>
+      <image:caption>OneVerse: Freelance Marketplace, Digital Products, Courses &amp; Portfolio Showcase</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://oneverse.site/products</loc>
     <lastmod>2025-11-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://oneverse.site/logo.png</image:loc>
+      <image:title>OneVerse Digital Products</image:title>
+      <image:caption>Buy and sell digital products on OneVerse marketplace</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://oneverse.site/hire</loc>
     <lastmod>2025-11-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://oneverse.site/logo.png</image:loc>
+      <image:title>OneVerse Hire Freelancers</image:title>
+      <image:caption>Hire talented freelancers and contractors on OneVerse</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://oneverse.site/courses</loc>
     <lastmod>2025-11-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://oneverse.site/logo.png</image:loc>
+      <image:title>OneVerse Online Courses</image:title>
+      <image:caption>Learn freelancing skills from industry experts on OneVerse Academy</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://oneverse.site/blog</loc>
     <lastmod>2025-11-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://oneverse.site/logo.png</image:loc>
+      <image:title>OneVerse Blog</image:title>
+      <image:caption>Freelancing tips, career insights, and productivity advice from OneVerse community</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://oneverse.site/careers</loc>
     <lastmod>2025-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://oneverse.site/logo.png</image:loc>
+      <image:title>OneVerse Careers</image:title>
+      <image:caption>Join the OneVerse team and help build the future of freelancing</image:caption>
+    </image:image>
   </url>
 </urlset>

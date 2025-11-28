@@ -1,4 +1,8 @@
-import { Variants } from "framer-motion";
+import { Variants, cubicBezier } from "framer-motion";
+
+const easeOut = cubicBezier(0.17, 0.67, 0.83, 0.67);
+const easeInOut = cubicBezier(0.42, 0, 0.58, 1);
+const backOut = cubicBezier(0.34, 1.56, 0.64, 1);
 
 // Page transition variants
 export const pageVariants: Variants = {
@@ -17,8 +21,8 @@ export const pageVariants: Variants = {
 };
 
 export const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
+  type: "tween" as const,
+  ease: easeOut,
   duration: 0.5,
 };
 
@@ -35,7 +39,7 @@ export const cardVariants: Variants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
   hover: {
@@ -44,7 +48,7 @@ export const cardVariants: Variants = {
     boxShadow: "0 20px 40px rgba(59, 130, 246, 0.15)",
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
   tap: {
@@ -77,7 +81,7 @@ export const itemVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };
@@ -95,7 +99,7 @@ export const profileCardVariants: Variants = {
     rotateY: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
   hover: {
@@ -117,7 +121,7 @@ export const skillBarVariants: Variants = {
     width: `${percentage}%`,
     transition: {
       duration: 1.5,
-      ease: "easeOut",
+      ease: easeOut,
       delay: 0.2,
     },
   }),
@@ -134,7 +138,7 @@ export const counterVariants: Variants = {
     scale: 1,
     transition: {
       duration: 0.8,
-      ease: "backOut",
+      ease: backOut,
     },
   },
 };
@@ -152,7 +156,7 @@ export const badgeVariants: Variants = {
     rotate: 0,
     transition: {
       duration: 0.6,
-      ease: "backOut",
+      ease: backOut,
       delay: 0.3,
     },
   },
@@ -176,7 +180,7 @@ export const timelineVariants: Variants = {
     x: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };
@@ -189,7 +193,7 @@ export const timelineConnectorVariants: Variants = {
     height: "100%",
     transition: {
       duration: 1,
-      ease: "easeOut",
+      ease: easeOut,
       delay: 0.5,
     },
   },
@@ -227,7 +231,7 @@ export const modalVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
   exit: {
@@ -264,7 +268,7 @@ export const loadingDotVariants: Variants = {
     transition: {
       duration: 1.5,
       repeat: Infinity,
-      ease: "easeInOut",
+      ease: easeInOut,
     },
   },
 };
@@ -280,7 +284,7 @@ export const scrollRevealVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };
@@ -296,7 +300,7 @@ export const typingIndicatorVariants: Variants = {
     scale: 1,
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
   exit: {
@@ -314,7 +318,7 @@ export const typingDotVariants: Variants = {
     transition: {
       duration: 0.8,
       repeat: Infinity,
-      ease: "easeInOut",
+      ease: easeInOut,
     },
   },
 };
@@ -330,7 +334,7 @@ export const rippleVariants: Variants = {
     opacity: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };
@@ -341,7 +345,7 @@ export const magneticVariants: Variants = {
     x: 0,
     y: 0,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 150,
       damping: 15,
     },
@@ -357,7 +361,7 @@ export const parallaxVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };

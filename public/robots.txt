@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /logo.png
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /settings
@@ -8,3 +9,7 @@ Disallow: /profile/edit
 Crawl-delay: 1
 
 Sitemap: https://oneverse.site/sitemap.xml
+
+# Brand Assets
+# Logo: https://oneverse.site/logo.png
+# Description: OneVerse - All-in-One Freelance Marketplace

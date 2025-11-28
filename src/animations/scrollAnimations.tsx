@@ -1,8 +1,10 @@
-import { motion, useAnimation, useInView } from "framer-motion";
+import { motion, useAnimation, useInView, useScroll } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { scrollRevealVariants } from "./variants";
+import { cubicBezier } from "framer-motion";
 
-// Scroll reveal hook
+const easeOut = cubicBezier(0.17, 0.67, 0.83, 0.67);
+
 export const useScrollReveal = (threshold = 0.1) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: threshold });
@@ -17,7 +19,6 @@ export const useScrollReveal = (threshold = 0.1) => {
   return { ref, controls };
 };
 
-// Scroll reveal component
 export const ScrollReveal = ({
   children,
   className = "",
@@ -51,7 +52,7 @@ export const ScrollReveal = ({
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: easeOut,
         delay,
       },
     },
@@ -70,7 +71,6 @@ export const ScrollReveal = ({
   );
 };
 
-// Staggered scroll reveal for lists
 export const StaggeredScrollReveal = ({
   children,
   className = "",
@@ -105,7 +105,7 @@ export const StaggeredScrollReveal = ({
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: easeOut,
       },
     },
   };
@@ -127,7 +127,6 @@ export const StaggeredScrollReveal = ({
   );
 };
 
-// Parallax scroll component
 export const ParallaxScroll = ({
   children,
   speed = 0.5,
@@ -138,13 +137,27 @@ export const ParallaxScroll = ({
   className?: string;
 }) => {
   const ref = useRef(null);
-  const { scrollYProgress } = useInView(ref, { once: false });
-  const y = scrollYProgress * speed * 100;
+  const { scrollY } = useScroll({ target: ref });
+  const [y, setY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ref.current) {
+        const rect = (ref.current as HTMLElement).getBoundingClientRect();
+        const elementY = window.scrollY + rect.top;
+        const offset = (window.scrollY - elementY) * speed;
+        setY(offset);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [speed]);
 
   return (
     <motion.div
       ref={ref}
-      style={{ y: `${y}px` }}
+      style={{ y }}
       className={className}
     >
       {children}
@@ -152,7 +165,6 @@ export const ParallaxScroll = ({
   );
 };
 
-// Progressive reveal animation
 export const ProgressiveReveal = ({
   children,
   className = "",
@@ -176,7 +188,7 @@ export const ProgressiveReveal = ({
       filter: "blur(0px)",
       transition: {
         duration: 0.8,
-        ease: "easeOut",
+        ease: easeOut,
       },
     },
   };
@@ -194,7 +206,6 @@ export const ProgressiveReveal = ({
   );
 };
 
-// Intersection observer hook for custom animations
 export const useIntersectionObserver = (
   threshold = 0.1,
   triggerOnce = true
@@ -214,7 +225,6 @@ export const useIntersectionObserver = (
   return { ref, controls, isInView };
 };
 
-// Animated counter on scroll
 export const AnimatedCounter = ({
   value,
   duration = 2,
@@ -224,11 +234,11 @@ export const AnimatedCounter = ({
   duration?: number;
   className?: string;
 }) => {
-  const { ref, controls } = useScrollReveal();
+  const { ref, controls, isInView } = useIntersectionObserver();
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (controls.getState().current === "visible") {
+    if (isInView) {
       const timer = setTimeout(() => {
         const increment = value / (duration * 60);
         const counter = setInterval(() => {
@@ -245,7 +255,7 @@ export const AnimatedCounter = ({
 
       return () => clearTimeout(timer);
     }
-  }, [controls, value, duration]);
+  }, [isInView, value, duration]);
 
   return (
     <motion.span
@@ -260,7 +270,6 @@ export const AnimatedCounter = ({
   );
 };
 
-// Magnetic hover effect
 export const MagneticHover = ({
   children,
   className = "",
@@ -308,7 +317,6 @@ export const MagneticHover = ({
   );
 };
 
-// Ripple effect on click
 export const RippleButton = ({
   children,
   onClick,
@@ -361,7 +369,7 @@ export const RippleButton = ({
           }}
           initial={{ scale: 0, opacity: 1 }}
           animate={{ scale: 4, opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: easeOut }}
         />
       ))}
     </button>

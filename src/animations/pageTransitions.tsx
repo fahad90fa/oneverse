@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { pageVariants, pageTransition } from "./variants";
 
-// Page transition wrapper component
 export const PageTransition = ({ children }: { children: React.ReactNode }) => {
   return (
     <motion.div
@@ -17,7 +16,6 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Slide transition for navigation
 export const SlideTransition = ({
   children,
   direction = "right"
@@ -57,7 +55,6 @@ export const SlideTransition = ({
   );
 };
 
-// Fade transition
 export const FadeTransition = ({ children }: { children: React.ReactNode }) => {
   const fadeVariants = {
     initial: { opacity: 0 },
@@ -79,7 +76,6 @@ export const FadeTransition = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Scale transition
 export const ScaleTransition = ({ children }: { children: React.ReactNode }) => {
   const scaleVariants = {
     initial: { opacity: 0, scale: 0.95 },
@@ -93,7 +89,7 @@ export const ScaleTransition = ({ children }: { children: React.ReactNode }) => 
       animate="in"
       exit="out"
       variants={scaleVariants}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={pageTransition}
       className="w-full"
     >
       {children}
@@ -101,7 +97,6 @@ export const ScaleTransition = ({ children }: { children: React.ReactNode }) => 
   );
 };
 
-// Staggered children transition
 export const StaggeredTransition = ({
   children,
   staggerDelay = 0.1
@@ -126,7 +121,7 @@ export const StaggeredTransition = ({
     in: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.4, ease: pageTransition.ease },
     },
     out: { opacity: 0, y: -20 },
   };
@@ -150,7 +145,6 @@ export const StaggeredTransition = ({
   );
 };
 
-// Loading transition with skeleton
 export const LoadingTransition = ({
   children,
   isLoading
@@ -175,9 +169,7 @@ export const LoadingTransition = ({
   );
 };
 
-// Route-based transitions
 export const getRouteTransition = (pathname: string) => {
-  // Different transitions for different route types
   if (pathname.startsWith("/dashboard")) {
     return SlideTransition;
   } else if (pathname.startsWith("/profile")) {
