@@ -12,8 +12,10 @@ import {
   LogOut
 } from "lucide-react";
 import { UserRole, AppUser, Profile } from "@/types";
+import { useSEO } from "@/hooks/useSEO";
 
 const Dashboard = () => {
+  useSEO('dashboard');
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);

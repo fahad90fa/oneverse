@@ -23,8 +23,17 @@ import AdvancedHero from "@/components/landing/AdvancedHero";
 import LandingNavbar from "@/components/landing/LandingNavbar";
 import { ThemeToggle } from "@/components/landing/ThemeToggle";
 import { useTheme } from "next-themes";
+import { useSEO } from "@/hooks/useSEO";
+import { addJsonLdSchema, schemas } from "@/utils/schema";
 
 const Index = () => {
+  useSEO('home');
+
+  useEffect(() => {
+    addJsonLdSchema(schemas.organization);
+    addJsonLdSchema(schemas.website);
+  }, []);
+
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [user, setUser] = useState(null);

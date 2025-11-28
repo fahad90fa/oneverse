@@ -16,8 +16,10 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { Product } from "@/types";
+import { useSEO } from "@/hooks/useSEO";
 
 const Products = () => {
+  useSEO('products');
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);

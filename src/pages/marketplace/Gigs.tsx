@@ -18,8 +18,10 @@ import {
 } from "lucide-react";
 import CreateGigModal from "@/components/gigs/CreateGigModal";
 import { Gig } from "@/types";
+import { useSEO } from "@/hooks/useSEO";
 
 const Gigs = () => {
+  useSEO('hire');
   const navigate = useNavigate();
   const [gigs, setGigs] = useState<Gig[]>([]);
   const [loading, setLoading] = useState(true);

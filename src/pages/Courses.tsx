@@ -9,8 +9,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import type { User } from '@supabase/supabase-js';
 import type { CourseWithInstructor } from '@/types/course';
+import { useSEO } from '@/hooks/useSEO';
 
 const Courses = () => {
+  useSEO('courses');
   const navigate = useNavigate();
   const { usePublishedCourses } = useCourseQueries();
   const { data: courses = [] } = usePublishedCourses();

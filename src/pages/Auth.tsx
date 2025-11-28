@@ -8,10 +8,12 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, ShoppingBag, Briefcase, User, Wrench } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 type UserRole = "buyer" | "seller" | "client" | "worker";
 
 const Auth = () => {
+  useSEO('auth');
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSignUp, setIsSignUp] = useState(false);

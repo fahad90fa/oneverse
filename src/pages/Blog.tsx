@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import type { User } from '@supabase/supabase-js';
+import { useSEO } from '@/hooks/useSEO';
 
 const Blog = () => {
+  useSEO('blog');
   const navigate = useNavigate();
   const { usePublishedBlogs } = useBlogQueries();
   const { data: blogs = [] } = usePublishedBlogs();
