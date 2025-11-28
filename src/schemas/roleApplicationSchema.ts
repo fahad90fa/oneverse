@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const roleApplicationSchema = z.object({
   role: z.enum(['worker', 'seller']),
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  phoneNumber: z.string().regex(/^[\d\s\-\+\(\)]+$/, 'Invalid phone number format'),
+  phoneNumber: z.string().regex(/^[\d\s\-()+]+$/, 'Invalid phone number format'),
   address: z.string().min(5, 'Address must be at least 5 characters'),
   city: z.string().min(2, 'City is required'),
   province: z.string().min(2, 'Province is required'),

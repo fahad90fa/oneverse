@@ -18,10 +18,10 @@ import {
 const Social = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [newPost, setNewPost] = useState("");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<Record<string, unknown>>(null);
 
   useEffect(() => {
     checkUser();
@@ -45,7 +45,7 @@ const Social = () => {
 
       if (error) throw error;
       setPosts(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
@@ -72,7 +72,7 @@ const Social = () => {
 
       setNewPost("");
       fetchPosts();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,

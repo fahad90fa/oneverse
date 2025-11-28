@@ -38,7 +38,7 @@ const Feed = () => {
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -108,7 +108,7 @@ const Feed = () => {
       } else {
         setPosts(postsData || []);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching posts:", error);
       toast({
         title: "Error",

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,7 +23,7 @@ export const useWishlist = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const fetchWishlist = async () => {
+  const fetchWishlist = useCallback(async () => {
     try {
       setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
@@ -40,7 +40,7 @@ export const useWishlist = () => {
 
       if (error) throw error;
       setWishlistItems(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching wishlist:', error);
       toast({
         title: 'Error',
@@ -50,7 +50,11 @@ export const useWishlist = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchWishlist();
+  }, [fetchWishlist]);
 
   const addToWishlist = async (productId: string) => {
     try {
@@ -90,7 +94,7 @@ export const useWishlist = () => {
         description: 'Item added to your wishlist',
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error adding to wishlist:', error);
       toast({
         title: 'Error',
@@ -116,7 +120,7 @@ export const useWishlist = () => {
         description: 'Item removed from your wishlist',
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error removing from wishlist:', error);
       toast({
         title: 'Error',
@@ -138,10 +142,6 @@ export const useWishlist = () => {
   const getWishlistCount = () => {
     return wishlistItems.length;
   };
-
-  useEffect(() => {
-    fetchWishlist();
-  }, []);
 
   return {
     wishlistItems,

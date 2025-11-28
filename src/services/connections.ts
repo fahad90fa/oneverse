@@ -23,7 +23,7 @@ export const connectionService = {
   async followUser(followingId: string): Promise<Connection> {
     const { data } = await supabase.auth.getSession();
     const session = data?.session;
-    const userId = (session as any)?.user?.id;
+    const userId = (session as unknown as { user?: { id?: string } })?.user?.id;
     if (!userId) throw new Error("Not authenticated");
 
     const result = (await supabase
@@ -34,7 +34,7 @@ export const connectionService = {
         status: "active",
       } as never)
       .select()
-      .single()) as any;
+      .single()) as unknown;
 
     const { data: connData, error } = result as {
       data: unknown;
@@ -48,7 +48,7 @@ export const connectionService = {
   async unfollowUser(followingId: string): Promise<void> {
     const { data } = await supabase.auth.getSession();
     const session = data?.session;
-    const userId = (session as any)?.user?.id;
+    const userId = (session as unknown as { user?: { id?: string } })?.user?.id;
     if (!userId) throw new Error("Not authenticated");
 
     const { error } = (await supabase
@@ -65,7 +65,7 @@ export const connectionService = {
   async blockUser(userId: string): Promise<Connection> {
     const { data } = await supabase.auth.getSession();
     const session = data?.session;
-    const currentUserId = (session as any)?.user?.id;
+    const currentUserId = (session as unknown as { user?: { id?: string } })?.user?.id;
     if (!currentUserId) throw new Error("Not authenticated");
 
     const result = (await supabase
@@ -76,7 +76,7 @@ export const connectionService = {
         status: "blocked",
       } as never)
       .select()
-      .single()) as any;
+      .single()) as unknown;
 
     const { data: connData, error } = result as {
       data: unknown;
@@ -90,7 +90,7 @@ export const connectionService = {
   async unblockUser(userId: string): Promise<void> {
     const { data } = await supabase.auth.getSession();
     const session = data?.session;
-    const currentUserId = (session as any)?.user?.id;
+    const currentUserId = (session as unknown as { user?: { id?: string } })?.user?.id;
     if (!currentUserId) throw new Error("Not authenticated");
 
     const { error } = (await supabase
@@ -108,7 +108,7 @@ export const connectionService = {
   async isFollowing(userId: string): Promise<boolean> {
     const { data } = await supabase.auth.getSession();
     const session = data?.session;
-    const currentUserId = (session as any)?.user?.id;
+    const currentUserId = (session as unknown as { user?: { id?: string } })?.user?.id;
     if (!currentUserId) return false;
 
     const { data: connData, error } = (await supabase
@@ -129,7 +129,7 @@ export const connectionService = {
   async checkFollowStatus(targetUserId: string) {
     const { data } = await supabase.auth.getSession();
     const session = data?.session;
-    const currentUserId = (session as any)?.user?.id;
+    const currentUserId = (session as unknown)?.user?.id;
     if (!currentUserId) return { isFollowing: false, followsBack: false };
 
     const { data: follows } = (await supabase
@@ -159,7 +159,7 @@ export const connectionService = {
     userId: string,
     limit = 20,
     offset = 0
-  ): Promise<any[]> {
+  ): Promise<unknown[]> {
     const { data, error } = (await supabase
       .from("connections" as never)
       .select(
@@ -179,14 +179,14 @@ export const connectionService = {
     };
 
     if (error) throw error;
-    return (data as any[]) || [];
+    return (data as unknown[]) || [];
   },
 
   async getFollowing(
     userId: string,
     limit = 20,
     offset = 0
-  ): Promise<any[]> {
+  ): Promise<unknown[]> {
     const { data, error } = (await supabase
       .from("connections" as never)
       .select(
@@ -206,7 +206,7 @@ export const connectionService = {
     };
 
     if (error) throw error;
-    return (data as any[]) || [];
+    return (data as unknown[]) || [];
   },
 
   async getFollowerCount(userId: string): Promise<number> {
@@ -241,7 +241,7 @@ export const connectionService = {
     limit = 10
   ): Promise<ConnectionSuggestion[]> {
     const { data } = await supabase.auth.getSession();
-    const userId = (data?.session as any)?.user?.id;
+    const userId = (data?.session as unknown)?.user?.id;
     if (!userId) return [];
 
     const { data: suggestions, error } = (await supabase
@@ -271,7 +271,7 @@ export const connectionService = {
 
   subscribeToFollowers(
     userId: string,
-    callback: (data: any) => void
+    callback: (data: Record<string, unknown>) => void
   ): RealtimeChannel {
     return supabase
       .channel(`followers-${userId}`)
@@ -290,7 +290,7 @@ export const connectionService = {
 
   subscribeToFollowing(
     userId: string,
-    callback: (data: any) => void
+    callback: (data: Record<string, unknown>) => void
   ): RealtimeChannel {
     return supabase
       .channel(`following-${userId}`)

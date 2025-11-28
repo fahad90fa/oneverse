@@ -24,7 +24,7 @@ interface Activity {
   description: string;
   timestamp: string;
   date: string;
-  icon: any;
+  icon: React.ReactNode;
   color: string;
   user?: string;
 }
@@ -153,7 +153,7 @@ const ClientActivity = () => {
         return;
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);

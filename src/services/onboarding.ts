@@ -80,7 +80,7 @@ export const onboardingService = {
           updated_at: new Date().toISOString(),
         } as never, { onConflict: "user_id" })) as {
         data: unknown;
-        error: any;
+        error: unknown;
       };
 
       if (error && error.code !== '42703') throw error;
@@ -114,7 +114,7 @@ export const onboardingService = {
           updated_at: new Date().toISOString(),
         } as never, { onConflict: "user_id" })) as {
         data: unknown;
-        error: any;
+        error: unknown;
       };
 
       if (error && error.code !== '42703') throw error;
@@ -128,7 +128,7 @@ export const onboardingService = {
             is_default: true,
           } as never)) as {
           data: unknown;
-          error: any;
+          error: unknown;
         };
 
         if (addressError && addressError.code !== '42703') throw addressError;
@@ -161,7 +161,7 @@ export const onboardingService = {
           updated_at: new Date().toISOString(),
         } as never, { onConflict: "user_id" })) as {
         data: unknown;
-        error: any;
+        error: unknown;
       };
 
       if (error && error.code !== '42703') throw error;
@@ -200,7 +200,7 @@ export const onboardingService = {
         .from("worker_skills" as never)
         .upsert(workerSkillsData as never, { onConflict: "user_id" })) as {
         data: unknown;
-        error: any;
+        error: unknown;
       };
 
       if (skillsError && skillsError.code !== '42703') throw skillsError;
@@ -216,7 +216,7 @@ export const onboardingService = {
           .from("portfolio_items" as never)
           .insert(portfolioData as never)) as {
           data: unknown;
-          error: any;
+          error: unknown;
         };
 
         if (portfolioError && portfolioError.code !== '42703') throw portfolioError;
@@ -275,28 +275,28 @@ export const onboardingService = {
         (async () => {
           const result = (await supabase.from("store_settings" as never).select("*").eq("user_id", userId).single()) as {
             data: unknown;
-            error: any;
+            error: unknown;
           };
           return result.error ? { data: null } : result;
         })(),
         (async () => {
           const result = (await supabase.from("buyer_preferences" as never).select("*").eq("user_id", userId).single()) as {
             data: unknown;
-            error: any;
+            error: unknown;
           };
           return result.error ? { data: null } : result;
         })(),
         (async () => {
           const result = (await supabase.from("client_preferences" as never).select("*").eq("user_id", userId).single()) as {
             data: unknown;
-            error: any;
+            error: unknown;
           };
           return result.error ? { data: null } : result;
         })(),
         (async () => {
           const result = (await supabase.from("worker_skills" as never).select("*").eq("user_id", userId).single()) as {
             data: unknown;
-            error: any;
+            error: unknown;
           };
           return result.error ? { data: null } : result;
         })(),

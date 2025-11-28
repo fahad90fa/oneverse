@@ -168,7 +168,7 @@ export const chatService = {
     }
   },
 
-  onMessageError(callback: (error: any) => void) {
+  onMessageError(callback: (error: Error) => void) {
     if (socket) {
       socket.on('message:error', callback);
     }

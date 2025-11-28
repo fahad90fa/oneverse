@@ -32,50 +32,47 @@ export const NotificationBell = () => {
   useEffect(() => {
     if (!currentUser) return;
 
-    fetchNotifications();
-    setupRealtimeListener();
-  }, [currentUser]);
-
-  const fetchNotifications = async () => {
-    if (!currentUser) return;
-
-    try {
-      setLoading(true);
-      const [notifs, count] = await Promise.all([
-        notificationService.getNotifications(currentUser, 5),
-        notificationService.getUnreadCount(currentUser),
-      ]);
-      setNotifications(notifs);
-      setUnreadCount(count);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const setupRealtimeListener = () => {
-    if (!currentUser) return;
-
-    const channel = notificationService.subscribeToNotifications(
-      currentUser,
-      (newNotification) => {
-        setNotifications((prev) => [newNotification, ...prev].slice(0, 5));
-        setUnreadCount((prev) => prev + 1);
-
-        if ("Notification" in window && Notification.permission === "granted") {
-          notificationService.sendPushNotification(newNotification.title, {
-            body: newNotification.description,
-            icon: "/favicon.ico",
-          });
-        }
+    const fetchNotifications = async () => {
+      try {
+        setLoading(true);
+        const [notifs, count] = await Promise.all([
+          notificationService.getNotifications(currentUser, 5),
+          notificationService.getUnreadCount(currentUser),
+        ]);
+        setNotifications(notifs);
+        setUnreadCount(count);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      } finally {
+        setLoading(false);
       }
-    );
-
-    return () => {
-      supabase.removeChannel(channel);
     };
-  };
+
+    const setupRealtimeListener = () => {
+      const channel = notificationService.subscribeToNotifications(
+        currentUser,
+        (newNotification) => {
+          setNotifications((prev) => [newNotification, ...prev].slice(0, 5));
+          setUnreadCount((prev) => prev + 1);
+
+          if ("Notification" in window && Notification.permission === "granted") {
+            notificationService.sendPushNotification(newNotification.title, {
+              body: newNotification.description,
+              icon: "/favicon.ico",
+            });
+          }
+        }
+      );
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
+
+    fetchNotifications();
+    const unsubscribe = setupRealtimeListener();
+    return unsubscribe;
+  }, [currentUser]);
 
   const handleMarkAsRead = async (notificationId: string) => {
     try {

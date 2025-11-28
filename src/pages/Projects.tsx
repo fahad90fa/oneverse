@@ -21,7 +21,7 @@ import {
 const Projects = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState("worker");
 
@@ -60,7 +60,7 @@ const Projects = () => {
 
       if (error) throw error;
       setProjects(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);

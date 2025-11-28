@@ -21,7 +21,7 @@ const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Record<string, unknown>>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const OrderDetail = () => {
 
       if (error) throw error;
       setOrder(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",

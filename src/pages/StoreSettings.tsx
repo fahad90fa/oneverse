@@ -76,7 +76,7 @@ const StoreSettings = () => {
     }
   };
 
-  const handleInputChange = (field: keyof StoreSettingsState, value: any) => {
+  const handleInputChange = (field: keyof StoreSettingsState, value: unknown) => {
     setSettings(prev => ({
       ...prev,
       [field]: value

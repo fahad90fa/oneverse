@@ -89,7 +89,7 @@ const ClientAnalytics = () => {
         return;
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);

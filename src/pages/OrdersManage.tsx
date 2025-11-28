@@ -226,7 +226,7 @@ const OrdersManage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Tabs value={filterStatus} onValueChange={(v: any) => setFilterStatus(v)}>
+          <Tabs value={filterStatus} onValueChange={(v: string) => setFilterStatus(v)}>
             <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="all">All ({orders.length})</TabsTrigger>
               <TabsTrigger value="pending">Pending ({stats.pending})</TabsTrigger>

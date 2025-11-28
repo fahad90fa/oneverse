@@ -78,33 +78,33 @@ export const KanbanBoard = ({ projectId, userRole }: KanbanBoardProps) => {
   );
 
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("project_tasks")
+          .select(`
+            *,
+            assigned_user:assigned_to (full_name, avatar_url)
+          `)
+          .eq("project_id", projectId)
+          .order("position", { ascending: true });
+
+        if (error) throw error;
+        setTasks(data || []);
+      } catch (error: unknown) {
+        console.error("Error fetching tasks:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load tasks",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTasks();
-  }, [projectId]);
-
-  const fetchTasks = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("project_tasks")
-        .select(`
-          *,
-          assigned_user:assigned_to (full_name, avatar_url)
-        `)
-        .eq("project_id", projectId)
-        .order("position", { ascending: true });
-
-      if (error) throw error;
-      setTasks(data || []);
-    } catch (error: any) {
-      console.error("Error fetching tasks:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load tasks",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [projectId, toast]);
 
   const createTask = async () => {
     if (!newTaskTitle.trim()) return;
@@ -147,7 +147,7 @@ export const KanbanBoard = ({ projectId, userRole }: KanbanBoardProps) => {
         title: "Task created",
         description: "New task has been added to the board"
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error creating task:", error);
       toast({
         title: "Error",
@@ -181,7 +181,7 @@ export const KanbanBoard = ({ projectId, userRole }: KanbanBoardProps) => {
 
       // Log activity
       await logActivity('task_updated', `Task moved to ${newStatus.replace('_', ' ')}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating task:", error);
       toast({
         title: "Error",

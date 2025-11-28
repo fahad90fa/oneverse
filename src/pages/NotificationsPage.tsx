@@ -35,7 +35,7 @@ interface GroupedNotifications {
   earlier: Notification[];
 }
 
-const NOTIFICATION_ICONS: { [key in NotificationType]: any } = {
+const NOTIFICATION_ICONS: { [key in NotificationType]: React.ReactNode } = {
   order: Package,
   message: MessageSquare,
   job: Briefcase,
@@ -330,7 +330,7 @@ const NotificationsPage = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs value={selectedTab} onValueChange={(v: any) => setSelectedTab(v)}>
+        <Tabs value={selectedTab} onValueChange={(v: string) => setSelectedTab(v)}>
           <TabsList className="w-full justify-start overflow-x-auto">
             <TabsTrigger value="all">All</TabsTrigger>
             {unreadCount > 0 && (

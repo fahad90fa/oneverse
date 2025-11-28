@@ -21,92 +21,92 @@ export const useRoleAccess = (requiredRole: 'worker' | 'seller'): RoleAccessStat
   });
 
   useEffect(() => {
-    checkRoleAccess();
-  }, [requiredRole]);
-
-  const checkRoleAccess = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user) {
-        setStatus({
-          isApproved: false,
-          isLoading: false,
-          hasRole: false,
-          isPending: false,
-          isRejected: false,
-        });
-        return;
-      }
-
-      const { data: userRole } = await supabase
-        .from('user_roles')
-        .select('role, is_active')
-        .eq('user_id', session.user.id)
-        .eq('role', requiredRole)
-        .single();
-
-      if (!userRole) {
-        setStatus({
-          isApproved: false,
-          isLoading: false,
-          hasRole: false,
-          isPending: false,
-          isRejected: false,
-        });
-        return;
-      }
-
-      if (!userRole.is_active) {
-        const { data: application } = await supabase
-          .from('role_applications')
-          .select('status')
-          .eq('user_id', session.user.id)
-          .eq('role', requiredRole)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
-
-        if (application?.status === 'rejected') {
+    const checkRoleAccess = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session?.user) {
           setStatus({
             isApproved: false,
             isLoading: false,
-            hasRole: true,
+            hasRole: false,
             isPending: false,
-            isRejected: true,
-          });
-          return;
-        }
-
-        if (application?.status === 'pending') {
-          setStatus({
-            isApproved: false,
-            isLoading: false,
-            hasRole: true,
-            isPending: true,
             isRejected: false,
           });
           return;
         }
-      }
 
-      setStatus({
-        isApproved: userRole.is_active,
-        isLoading: false,
-        hasRole: true,
-        isPending: !userRole.is_active,
-        isRejected: false,
-      });
-    } catch (error) {
-      setStatus({
-        isApproved: false,
-        isLoading: false,
-        hasRole: false,
-        isPending: false,
-        isRejected: false,
-      });
-    }
-  };
+        const { data: userRole } = await supabase
+          .from('user_roles')
+          .select('role, is_active')
+          .eq('user_id', session.user.id)
+          .eq('role', requiredRole)
+          .single();
+
+        if (!userRole) {
+          setStatus({
+            isApproved: false,
+            isLoading: false,
+            hasRole: false,
+            isPending: false,
+            isRejected: false,
+          });
+          return;
+        }
+
+        if (!userRole.is_active) {
+          const { data: application } = await supabase
+            .from('role_applications')
+            .select('status')
+            .eq('user_id', session.user.id)
+            .eq('role', requiredRole)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+          if (application?.status === 'rejected') {
+            setStatus({
+              isApproved: false,
+              isLoading: false,
+              hasRole: true,
+              isPending: false,
+              isRejected: true,
+            });
+            return;
+          }
+
+          if (application?.status === 'pending') {
+            setStatus({
+              isApproved: false,
+              isLoading: false,
+              hasRole: true,
+              isPending: true,
+              isRejected: false,
+            });
+            return;
+          }
+        }
+
+        setStatus({
+          isApproved: userRole.is_active,
+          isLoading: false,
+          hasRole: true,
+          isPending: !userRole.is_active,
+          isRejected: false,
+        });
+      } catch (error) {
+        setStatus({
+          isApproved: false,
+          isLoading: false,
+          hasRole: false,
+          isPending: false,
+          isRejected: false,
+        });
+      }
+    };
+
+    checkRoleAccess();
+  }, [requiredRole]);
 
   return status;
 };

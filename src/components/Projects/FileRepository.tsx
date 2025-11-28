@@ -57,45 +57,44 @@ export const FileRepository = ({ projectId, userRole }: FileRepositoryProps) => 
   const [uploadTaskId, setUploadTaskId] = useState("");
 
   useEffect(() => {
-    fetchFiles();
-  }, [projectId, selectedFolder]);
+    const fetchFiles = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("project_files")
+          .select(`
+            *,
+            uploader:uploaded_by (full_name)
+          `)
+          .eq("project_id", projectId)
+          .eq("folder_path", selectedFolder)
+          .order("created_at", { ascending: false });
 
-  const fetchFiles = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("project_files")
-        .select(`
-          *,
-          uploader:uploaded_by (full_name)
-        `)
-        .eq("project_id", projectId)
-        .eq("folder_path", selectedFolder)
-        .order("created_at", { ascending: false });
+        if (error) throw error;
+        setFiles(data || []);
 
-      if (error) throw error;
-      setFiles(data || []);
+        const { data: allFiles, error: folderError } = await supabase
+          .from("project_files")
+          .select("folder_path")
+          .eq("project_id", projectId);
 
-      // Extract unique folders
-      const { data: allFiles, error: folderError } = await supabase
-        .from("project_files")
-        .select("folder_path")
-        .eq("project_id", projectId);
-
-      if (!folderError && allFiles) {
-        const uniqueFolders = [...new Set(allFiles.map(f => f.folder_path))];
-        setFolders(uniqueFolders);
+        if (!folderError && allFiles) {
+          const uniqueFolders = [...new Set(allFiles.map(f => f.folder_path))];
+          setFolders(uniqueFolders);
+        }
+      } catch (error: unknown) {
+        console.error("Error fetching files:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load files",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      console.error("Error fetching files:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load files",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchFiles();
+  }, [projectId, selectedFolder, toast]);
 
   const uploadFiles = async () => {
     if (selectedFiles.length === 0) return;
@@ -152,7 +151,7 @@ export const FileRepository = ({ projectId, userRole }: FileRepositoryProps) => 
       setSelectedFiles([]);
       setUploadTaskId("");
       fetchFiles();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error uploading files:", error);
       toast({
         title: "Upload failed",
@@ -219,7 +218,7 @@ export const FileRepository = ({ projectId, userRole }: FileRepositoryProps) => 
         title: "File deleted",
         description: `${fileName} has been deleted`
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error deleting file:", error);
       toast({
         title: "Delete failed",

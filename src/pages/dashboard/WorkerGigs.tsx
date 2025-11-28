@@ -52,7 +52,7 @@ const WorkerGigs = () => {
       }
 
       setWorkerId(session.user.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);

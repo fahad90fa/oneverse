@@ -66,7 +66,7 @@ interface RecentActivity {
   title: string;
   description: string;
   timestamp: string;
-  icon: any;
+  icon: React.ReactNode;
   color: string;
 }
 
@@ -173,7 +173,7 @@ const ClientDashboard = () => {
 
   useEffect(() => {
     if (!projectsQuery.data) return;
-    const milestones = projectsQuery.data.map((project: any) => ({
+    const milestones = projectsQuery.data.map((project: unknown) => ({
       projectId: project.id,
       projectName: project.title,
       progress: Math.floor(Math.random() * 100),
@@ -185,7 +185,7 @@ const ClientDashboard = () => {
 
   useEffect(() => {
     if (!proposalsQuery.data) return;
-    const transformedProposals = proposalsQuery.data.map((proposal: any) => ({
+    const transformedProposals = proposalsQuery.data.map((proposal: unknown) => ({
       id: proposal.id,
       workerName: proposal.worker?.full_name || 'Unknown',
       title: proposal.job?.title || 'Untitled',
@@ -208,7 +208,7 @@ const ClientDashboard = () => {
 
   useEffect(() => {
     if (!activityQuery.data) return;
-    const transformedActivities = activityQuery.data.map((activity: any) => ({
+    const transformedActivities = activityQuery.data.map((activity: unknown) => ({
       id: activity.id,
       type: activity.type,
       title: activity.title,
@@ -257,7 +257,7 @@ const ClientDashboard = () => {
       }
 
       setClientId(session.user.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",

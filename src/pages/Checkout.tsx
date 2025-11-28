@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { paymentService } from "@/services/payment";
@@ -44,11 +44,7 @@ const Checkout = () => {
     country: ""
   });
 
-  useEffect(() => {
-    fetchCartItems();
-  }, []);
-
-  const fetchCartItems = async () => {
+  const fetchCartItems = useCallback(async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
@@ -66,19 +62,23 @@ const Checkout = () => {
 
       if (error) throw error;
 
-      setCartItems(data?.map((item: any) => ({
+      setCartItems(data?.map((item: unknown) => ({
         id: item.id,
         product_id: item.product_id,
         quantity: item.quantity,
         price: item.product?.price || 0,
         title: item.product?.title || "Product"
       })) || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchCartItems();
+  }, [fetchCartItems]);
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shipping = subtotal > 50 ? 0 : 9.99;
@@ -150,7 +150,7 @@ const Checkout = () => {
       });
 
       navigate(`/orders`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error placing order:", error);
       toast({
         title: "Error",

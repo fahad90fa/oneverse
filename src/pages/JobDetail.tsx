@@ -22,8 +22,8 @@ const JobDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [job, setJob] = useState<any>(null);
-  const [proposals, setProposals] = useState<any[]>([]);
+  const [job, setJob] = useState<Record<string, unknown>>(null);
+  const [proposals, setProposals] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [proposalText, setProposalText] = useState("");
   const [submittingProposal, setSubmittingProposal] = useState(false);
@@ -48,7 +48,7 @@ const JobDetail = () => {
 
       if (error) throw error;
       setJob(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",
@@ -73,7 +73,7 @@ const JobDetail = () => {
 
       if (error) throw error;
       setProposals(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     }
   };
@@ -107,7 +107,7 @@ const JobDetail = () => {
 
       setProposalText("");
       fetchProposals();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,

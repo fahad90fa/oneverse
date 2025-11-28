@@ -34,7 +34,7 @@ const BuyerDashboard = () => {
     totalSpent: 0,
     avgRating: 0
   });
-  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [recentOrders, setRecentOrders] = useState<unknown[]>([]);
   const [spendingData, setSpendingData] = useState<number[]>([]);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const BuyerDashboard = () => {
       // Mock spending data for chart
       setSpendingData([120, 150, 180, 200, 250, 300, 280]);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);

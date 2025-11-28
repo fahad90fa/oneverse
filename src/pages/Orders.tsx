@@ -18,7 +18,7 @@ import {
 const Orders = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
 
@@ -46,7 +46,7 @@ const Orders = () => {
 
       if (error) throw error;
       setOrders(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",

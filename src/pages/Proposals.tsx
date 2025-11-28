@@ -286,7 +286,7 @@ const Proposals = () => {
             <span className="text-sm font-medium">Filter:</span>
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
+              onChange={(e) => setFilterStatus(e.target.value as unknown)}
               className="text-sm border border-border rounded px-2 py-1 bg-background"
             >
               <option value="all">All Proposals</option>
@@ -301,7 +301,7 @@ const Proposals = () => {
             <span className="text-sm font-medium">Sort:</span>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as unknown)}
               className="text-sm border border-border rounded px-2 py-1 bg-background"
             >
               <option value="newest">Newest First</option>

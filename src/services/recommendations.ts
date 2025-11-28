@@ -136,7 +136,7 @@ export class RecommendationsService {
         .from('orders')
         .select('*')
         .eq('user_id', userId)
-        .limit(10) as any)) as {
+        .limit(10) as unknown)) as {
         data: unknown;
         error: unknown;
       };
@@ -165,7 +165,7 @@ export class RecommendationsService {
       if (error) throw error;
 
       const products = Array.isArray(data) ? data : [];
-      return (products || []).map((product: any) => ({
+      return (products || []).map((product: unknown) => ({
         ...product,
         score: Math.random() * 0.3 + 0.8,
         reason: 'Based on your purchases'

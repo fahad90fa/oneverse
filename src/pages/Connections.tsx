@@ -64,7 +64,7 @@ const Connections = () => {
         setHasMoreFollowers(false);
       }
 
-      const users = data.map((item: any) => ({
+      const users = data.map((item: unknown) => ({
         id: item.id,
         user_id: item.profiles?.user_id,
         full_name: item.profiles?.full_name,
@@ -102,7 +102,7 @@ const Connections = () => {
         setHasMoreFollowing(false);
       }
 
-      const users = data.map((item: any) => ({
+      const users = data.map((item: unknown) => ({
         id: item.id,
         user_id: item.profiles?.user_id,
         full_name: item.profiles?.full_name,
@@ -164,7 +164,12 @@ const Connections = () => {
     user.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const UserCard = ({ user, showFollowButton = true }: any) => (
+  interface UserCardProps {
+    user: Record<string, unknown>;
+    showFollowButton?: boolean;
+  }
+  
+  const UserCard = ({ user, showFollowButton = true }: UserCardProps) => (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}

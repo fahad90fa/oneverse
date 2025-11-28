@@ -92,7 +92,7 @@ const SellerRevenue = () => {
     }
   };
 
-  const generateMockRevenueData = (orders: any[]): RevenueData[] => {
+  const generateMockRevenueData = (orders: unknown[]): RevenueData[] => {
     const statuses = ["completed", "pending", "refunded"] as const;
     return Array.from({ length: 30 }, (_, i) => ({
       date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),

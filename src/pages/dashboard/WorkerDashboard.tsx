@@ -66,7 +66,7 @@ interface Activity {
   title: string;
   description: string;
   timestamp: string;
-  icon: any;
+  icon: React.ReactNode;
   color: string;
 }
 
@@ -123,7 +123,7 @@ const WorkerDashboard = () => {
 
   useEffect(() => {
     if (!gigsQuery.data) return;
-    const projects = gigsQuery.data.map((gig: any) => ({
+    const projects = gigsQuery.data.map((gig: unknown) => ({
       id: gig.id,
       title: gig.title,
       clientName: 'Client',
@@ -136,7 +136,7 @@ const WorkerDashboard = () => {
 
   useEffect(() => {
     if (!proposalsQuery.data) return;
-    const transformed = proposalsQuery.data.map((proposal: any) => ({
+    const transformed = proposalsQuery.data.map((proposal: unknown) => ({
       id: proposal.id,
       projectTitle: proposal.job?.title || 'Untitled',
       clientName: proposal.client?.full_name || 'Unknown',
@@ -149,7 +149,7 @@ const WorkerDashboard = () => {
 
   useEffect(() => {
     if (!reviewsQuery.data) return;
-    const transformed = reviewsQuery.data.map((review: any) => ({
+    const transformed = reviewsQuery.data.map((review: unknown) => ({
       id: review.id,
       clientName: review.reviewer?.full_name || 'Unknown',
       rating: review.rating,
@@ -189,7 +189,7 @@ const WorkerDashboard = () => {
       const monthlyEarnings: Record<string, number> = {};
       const categoryEarnings: Record<string, number> = {};
 
-      paymentsData.forEach((payment: any) => {
+      paymentsData.forEach((payment: unknown) => {
         const date = new Date(payment.created_at);
         const monthKey = date.toLocaleDateString('en-US', { month: 'short' });
         const category = payment.category || 'Other';
@@ -229,7 +229,7 @@ const WorkerDashboard = () => {
 
       if (!activities) return;
 
-      const iconMap: Record<string, any> = {
+      const iconMap: Record<string, React.ReactNode> = {
         milestone: CheckCircle2,
         feedback: MessageSquare,
         file: FolderOpen,
@@ -245,7 +245,7 @@ const WorkerDashboard = () => {
         message: 'text-blue-500'
       };
 
-      const transformed = activities.map((activity: any) => ({
+      const transformed = activities.map((activity: unknown) => ({
         id: activity.id,
         type: activity.activity_type || 'message',
         title: activity.title || 'Activity',
@@ -271,7 +271,7 @@ const WorkerDashboard = () => {
         .single();
 
       if (profile?.skills && Array.isArray(profile.skills)) {
-        const skills = profile.skills.slice(0, 5).map((skill: any) => ({
+        const skills = profile.skills.slice(0, 5).map((skill: unknown) => ({
           skill: typeof skill === 'string' ? skill : skill.name || 'Unknown',
           level: typeof skill === 'object' ? skill.level || 85 : 85
         }));
@@ -362,7 +362,7 @@ const WorkerDashboard = () => {
       }
 
       setWorkerId(session.user.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",

@@ -22,7 +22,7 @@ interface Notification {
   type: string;
   title: string;
   message: string;
-  icon: any;
+  icon: React.ReactNode;
   color: string;
   read: boolean;
   created_at: string;
@@ -56,7 +56,7 @@ const Notifications = () => {
 
       if (error) throw error;
 
-      const formattedNotifications = data?.map((notif: any) => ({
+      const formattedNotifications = data?.map((notif: unknown) => ({
         id: notif.id,
         type: notif.type,
         title: getTitle(notif.type),
@@ -69,7 +69,7 @@ const Notifications = () => {
       })) || [];
 
       setNotifications(formattedNotifications);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -136,7 +136,7 @@ const Notifications = () => {
 
       if (error) throw error;
       fetchNotifications();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,
@@ -157,7 +157,7 @@ const Notifications = () => {
       toast({
         title: "Notification deleted"
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,

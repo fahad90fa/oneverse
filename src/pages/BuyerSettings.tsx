@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,18 +52,18 @@ const BuyerSettings = () => {
     confirmPassword: ""
   });
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
       navigate("/auth");
     }
-  };
+  }, [navigate]);
 
-  const handleSettingChange = (key: keyof SettingsState, value: any) => {
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  const handleSettingChange = (key: keyof SettingsState, value: unknown) => {
     setSettings(prev => ({
       ...prev,
       [key]: value
@@ -139,7 +139,7 @@ const BuyerSettings = () => {
         newPassword: "",
         confirmPassword: ""
       }));
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to update password",

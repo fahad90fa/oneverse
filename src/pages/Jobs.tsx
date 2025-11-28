@@ -20,7 +20,7 @@ import {
 const Jobs = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [jobs, setJobs] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -41,7 +41,7 @@ const Jobs = () => {
 
       if (error) throw error;
       setJobs(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);

@@ -1,23 +1,8 @@
-import { motion, useAnimation, useInView, useScroll } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { scrollRevealVariants } from "./variants";
-import { cubicBezier } from "framer-motion";
-
-const easeOut = cubicBezier(0.17, 0.67, 0.83, 0.67);
-
-export const useScrollReveal = (threshold = 0.1) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: threshold });
-  const controls = useAnimation();
-
-  useEffect(() => {
-    if (isInView) {
-      controls.start("visible");
-    }
-  }, [controls, isInView]);
-
-  return { ref, controls };
-};
+import { easeOut } from "./constants";
+import { useScrollReveal, useIntersectionObserver } from "./scrollHooks";
 
 export const ScrollReveal = ({
   children,
@@ -206,24 +191,7 @@ export const ProgressiveReveal = ({
   );
 };
 
-export const useIntersectionObserver = (
-  threshold = 0.1,
-  triggerOnce = true
-) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: triggerOnce, amount: threshold });
-  const controls = useAnimation();
 
-  useEffect(() => {
-    if (isInView) {
-      controls.start("visible");
-    } else if (!triggerOnce) {
-      controls.start("hidden");
-    }
-  }, [controls, isInView, triggerOnce]);
-
-  return { ref, controls, isInView };
-};
 
 export const AnimatedCounter = ({
   value,

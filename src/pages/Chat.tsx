@@ -68,7 +68,7 @@ const Chat = () => {
 
       const conversationMap = new Map<string, Conversation>();
 
-      data?.forEach((msg: any) => {
+      data?.forEach((msg: unknown) => {
         const otherUserId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
         if (!conversationMap.has(otherUserId)) {
           conversationMap.set(otherUserId, {
@@ -157,24 +157,14 @@ const Chat = () => {
     }
   }, [user, selectedConversation, fetchConversations]);
 
-  useEffect(() => {
-    if (selectedConversation) {
-      fetchMessages();
-      // Mark messages as read when conversation is opened
-      markMessagesAsRead();
-    }
-  }, [selectedConversation, fetchMessages]);
-
-  const markMessagesAsRead = async () => {
+  const markMessagesAsRead = useCallback(async () => {
     if (!selectedConversation || !user) return;
 
     try {
-      // Get unread messages from this conversation
       const unreadMessages = messages.filter(
         msg => msg.receiver_id === user?.id && !msg.is_read
       );
 
-      // Mark each unread message as read
       for (const message of unreadMessages) {
         if (chatService.isConnected()) {
           chatService.markAsRead(message.id, user.id);
@@ -183,7 +173,14 @@ const Chat = () => {
     } catch (error) {
       console.error('Error marking messages as read:', error);
     }
-  };
+  }, [selectedConversation, user, messages]);
+
+  useEffect(() => {
+    if (selectedConversation) {
+      fetchMessages();
+      markMessagesAsRead();
+    }
+  }, [selectedConversation, fetchMessages, markMessagesAsRead]);
 
   useEffect(() => {
     scrollToBottom();
@@ -542,7 +539,7 @@ const Chat = () => {
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        handleSendMessage(e as any);
+                        handleSendMessage(e as React.FormEvent);
                       }
                     }}
                     aria-label="Type your message"

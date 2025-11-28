@@ -21,8 +21,8 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [product, setProduct] = useState<any>(null);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [product, setProduct] = useState<Record<string, unknown>>(null);
+  const [reviews, setReviews] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
@@ -46,7 +46,7 @@ const ProductDetail = () => {
 
       if (error) throw error;
       setProduct(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",
@@ -71,7 +71,7 @@ const ProductDetail = () => {
 
       if (error) throw error;
       setReviews(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     }
   };
@@ -88,7 +88,7 @@ const ProductDetail = () => {
         title: "Added to cart!",
         description: `${quantity} item(s) added to your cart`
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,
@@ -152,7 +152,7 @@ const ProductDetail = () => {
                     <Star
                       key={i}
                       className={`h-5 w-5 ${
-                        i < Math.round(avgRating as any)
+                        i < Math.round(avgRating as unknown)
                           ? "fill-yellow-500 text-yellow-500"
                           : "text-muted-foreground"
                       }`}
@@ -287,7 +287,7 @@ const ProductDetail = () => {
                   <Star
                     key={i}
                     className={`h-5 w-5 ${
-                      i < Math.round(avgRating as any)
+                      i < Math.round(avgRating as unknown)
                         ? "fill-yellow-500 text-yellow-500"
                         : "text-muted-foreground"
                     }`}

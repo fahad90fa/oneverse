@@ -72,7 +72,7 @@ const defaultTarget: UploadTarget = { bucket: 'documents', folder: 'general' };
 const sanitizeFileName = (name: string) =>
   name
     .toLowerCase()
-    .replace(/[^a-z0-9\.\-]/g, '-')
+    .replace(/[^a-z0-9.-]/g, '-')
     .replace(/-+/g, '-');
 
 const resolveUserId = async (providedId?: string) => {

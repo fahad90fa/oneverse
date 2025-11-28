@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -60,15 +60,15 @@ const AdminApprovals = () => {
 
   useEffect(() => {
     checkAdminAccess();
-  }, []);
+  }, [checkAdminAccess]);
 
   useEffect(() => {
     if (isAdmin) {
       fetchApplications();
     }
-  }, [isAdmin, filterRole, filterStatus]);
+  }, [isAdmin, fetchApplications]);
 
-  const checkAdminAccess = async () => {
+  const checkAdminAccess = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
       navigate('/auth');
@@ -92,9 +92,9 @@ const AdminApprovals = () => {
     }
 
     setIsAdmin(true);
-  };
+  }, [navigate, toast]);
 
-  const fetchApplications = async () => {
+  const fetchApplications = useCallback(async () => {
     setLoading(true);
     try {
       let query = supabase
@@ -114,7 +114,7 @@ const AdminApprovals = () => {
 
       if (error) throw error;
       setApplications(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: error.message,
@@ -123,7 +123,7 @@ const AdminApprovals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterRole, filterStatus, toast]);
 
   const handleApproval = async () => {
     if (!selectedApp) return;
@@ -173,7 +173,7 @@ const AdminApprovals = () => {
       setShowActionModal(false);
       setAdminNotes('');
       fetchApplications();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: error.message,
@@ -222,7 +222,7 @@ const AdminApprovals = () => {
       setShowActionModal(false);
       setAdminNotes('');
       fetchApplications();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: error.message,
@@ -289,7 +289,7 @@ const AdminApprovals = () => {
             <div className="flex gap-4 mb-6 flex-wrap">
               <div className="flex gap-2 items-center">
                 <label className="text-sm font-medium">Role:</label>
-                <Select value={filterRole} onValueChange={(v: any) => setFilterRole(v)}>
+                <Select value={filterRole} onValueChange={(v: string) => setFilterRole(v as 'all' | 'worker' | 'seller')}>
                   <SelectTrigger className="w-32">
                     <SelectValue />
                   </SelectTrigger>
@@ -303,7 +303,7 @@ const AdminApprovals = () => {
 
               <div className="flex gap-2 items-center">
                 <label className="text-sm font-medium">Status:</label>
-                <Select value={filterStatus} onValueChange={(v: any) => setFilterStatus(v)}>
+                <Select value={filterStatus} onValueChange={(v: string) => setFilterStatus(v as 'all' | 'pending' | 'approved' | 'rejected')}>
                   <SelectTrigger className="w-40">
                     <SelectValue />
                   </SelectTrigger>

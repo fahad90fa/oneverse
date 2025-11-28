@@ -19,7 +19,7 @@ interface ActivityItem {
   id: string;
   activity_type: string;
   description: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   created_at: string;
   user: {
     full_name: string;
@@ -37,9 +37,35 @@ export const ActivityTimeline = ({ projectId }: ActivityTimelineProps) => {
   const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        let query = supabase
+          .from("project_activities")
+          .select(`
+            *,
+            user:user_id (full_name, avatar_url)
+          `)
+          .eq("project_id", projectId)
+          .order("created_at", { ascending: false })
+          .limit(50);
+
+        if (filter !== "all") {
+          query = query.eq("activity_type", filter);
+        }
+
+        const { data, error } = await query;
+
+        if (error) throw error;
+        setActivities(data || []);
+      } catch (error: unknown) {
+        console.error("Error fetching activities:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchActivities();
 
-    // Set up real-time subscription
     const subscription = supabase
       .channel(`project_activities_${projectId}`)
       .on(
@@ -50,8 +76,8 @@ export const ActivityTimeline = ({ projectId }: ActivityTimelineProps) => {
           table: 'project_activities',
           filter: `project_id=eq.${projectId}`
         },
-        (payload) => {
-          fetchActivities(); // Refresh activities when new ones are added
+        () => {
+          fetchActivities();
         }
       )
       .subscribe();
@@ -60,34 +86,6 @@ export const ActivityTimeline = ({ projectId }: ActivityTimelineProps) => {
       subscription.unsubscribe();
     };
   }, [projectId, filter]);
-
-  const fetchActivities = async () => {
-    try {
-      let query = supabase
-        .from("project_activities")
-        .select(`
-          *,
-          user:user_id (full_name, avatar_url)
-        `)
-        .eq("project_id", projectId)
-        .order("created_at", { ascending: false })
-        .limit(50);
-
-      // Apply filter
-      if (filter !== "all") {
-        query = query.eq("activity_type", filter);
-      }
-
-      const { data, error } = await query;
-
-      if (error) throw error;
-      setActivities(data || []);
-    } catch (error: any) {
-      console.error("Error fetching activities:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {

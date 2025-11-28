@@ -73,7 +73,7 @@ export const notificationService = {
       .from("notifications" as never)
       .insert(data as never)
       .select()
-      .single() as any);
+      .single() as unknown);
 
     const { data: notification, error } = result as {
       data: unknown;
@@ -105,7 +105,7 @@ export const notificationService = {
       .select("*")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
-      .range(offset, offset + limit - 1) as any;
+      .range(offset, offset + limit - 1) as unknown;
 
     if (filter) {
       query = query.eq("type", filter);
@@ -377,14 +377,14 @@ export const notificationService = {
 
       const { data } = await supabase.auth.getSession();
       const session = data?.session;
-      const userId = (session as any)?.user?.id;
+      const userId = (session as unknown)?.user?.id;
       
       if (userId) {
         await (supabase.from("push_subscriptions" as never).upsert({
           user_id: userId,
           subscription: JSON.stringify(subscription),
           updated_at: new Date().toISOString(),
-        } as never) as any);
+        } as never) as unknown);
       }
 
       return subscription;

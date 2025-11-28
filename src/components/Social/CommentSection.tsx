@@ -39,81 +39,78 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetchComments();
-  }, [postId]);
+    const fetchComments = async () => {
+      try {
+        const { data: commentsData, error } = await supabase
+          .from("comments")
+          .select(`
+            *,
+            user:user_id (id, full_name, avatar_url)
+          `)
+          .eq("post_id", postId)
+          .is("parent_id", null)
+          .order("created_at", { ascending: true });
 
-  const fetchComments = async () => {
-    try {
-      // Fetch top-level comments
-      const { data: commentsData, error } = await supabase
-        .from("comments")
-        .select(`
-          *,
-          user:user_id (id, full_name, avatar_url)
-        `)
-        .eq("post_id", postId)
-        .is("parent_id", null)
-        .order("created_at", { ascending: true });
+        if (error) throw error;
 
-      if (error) throw error;
+        const commentsWithReplies = await Promise.all(
+          (commentsData || []).map(async (comment) => {
+            const { data: repliesData } = await supabase
+              .from("comments")
+              .select(`
+                *,
+                user:user_id (id, full_name, avatar_url)
+              `)
+              .eq("parent_id", comment.id)
+              .order("created_at", { ascending: true });
 
-      // Fetch replies for each comment
-      const commentsWithReplies = await Promise.all(
-        (commentsData || []).map(async (comment) => {
-          const { data: repliesData } = await supabase
-            .from("comments")
-            .select(`
-              *,
-              user:user_id (id, full_name, avatar_url)
-            `)
-            .eq("parent_id", comment.id)
-            .order("created_at", { ascending: true });
+            return {
+              ...comment,
+              replies: repliesData || []
+            };
+          })
+        );
 
-          return {
-            ...comment,
-            replies: repliesData || []
-          };
-        })
-      );
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const allCommentIds = [
+            ...commentsWithReplies.map(c => c.id),
+            ...commentsWithReplies.flatMap(c => c.replies?.map(r => r.id) || [])
+          ];
 
-      // Check user's likes on comments
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const allCommentIds = [
-          ...commentsWithReplies.map(c => c.id),
-          ...commentsWithReplies.flatMap(c => c.replies?.map(r => r.id) || [])
-        ];
+          if (allCommentIds.length > 0) {
+            const { data: likesData } = await supabase
+              .from("likes")
+              .select("comment_id")
+              .eq("user_id", session.user.id)
+              .in("comment_id", allCommentIds);
 
-        if (allCommentIds.length > 0) {
-          const { data: likesData } = await supabase
-            .from("likes")
-            .select("comment_id")
-            .eq("user_id", session.user.id)
-            .in("comment_id", allCommentIds);
+            const likedCommentIds = new Set(likesData?.map(l => l.comment_id) || []);
 
-          const likedCommentIds = new Set(likesData?.map(l => l.comment_id) || []);
-
-          commentsWithReplies.forEach(comment => {
-            comment.is_liked = likedCommentIds.has(comment.id);
-            comment.replies?.forEach(reply => {
-              reply.is_liked = likedCommentIds.has(reply.id);
+            commentsWithReplies.forEach(comment => {
+              comment.is_liked = likedCommentIds.has(comment.id);
+              comment.replies?.forEach(reply => {
+                reply.is_liked = likedCommentIds.has(reply.id);
+              });
             });
-          });
+          }
         }
-      }
 
-      setComments(commentsWithReplies);
-    } catch (error: any) {
-      console.error("Error fetching comments:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load comments",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+        setComments(commentsWithReplies);
+      } catch (error: unknown) {
+        console.error("Error fetching comments:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load comments",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, [postId, toast]);
 
   const handleSubmitComment = async () => {
     if (!newComment.trim()) return;
@@ -140,7 +137,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
 
       setComments(prev => [...prev, { ...data, replies: [] }]);
       setNewComment("");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error creating comment:", error);
       toast({
         title: "Error",
@@ -184,7 +181,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
 
       setReplyingTo(null);
       setReplyContent("");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error creating reply:", error);
       toast({
         title: "Error",
@@ -249,7 +246,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
         }
         return comment;
       }));
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error toggling comment like:", error);
       toast({
         title: "Error",

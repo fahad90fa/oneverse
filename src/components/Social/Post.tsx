@@ -79,7 +79,7 @@ export const Post = ({ post, onInteraction }: PostProps) => {
       }
 
       onInteraction(post.id, 'like');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error toggling like:", error);
       toast({
         title: "Error",
@@ -128,7 +128,7 @@ export const Post = ({ post, onInteraction }: PostProps) => {
       }
 
       onInteraction(post.id, 'share');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error toggling share:", error);
       toast({
         title: "Error",

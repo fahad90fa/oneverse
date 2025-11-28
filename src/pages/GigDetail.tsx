@@ -20,8 +20,8 @@ const GigDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [gig, setGig] = useState<any>(null);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [gig, setGig] = useState<Record<string, unknown>>(null);
+  const [reviews, setReviews] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const GigDetail = () => {
 
       if (error) throw error;
       setGig(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",
@@ -69,7 +69,7 @@ const GigDetail = () => {
 
       if (error) throw error;
       setReviews(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     }
   };
@@ -83,7 +83,7 @@ const GigDetail = () => {
       }
 
       navigate("/chat");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,
@@ -141,7 +141,7 @@ const GigDetail = () => {
                     <Star
                       key={i}
                       className={`h-5 w-5 ${
-                        i < Math.round(avgRating as any)
+                        i < Math.round(avgRating as unknown)
                           ? "fill-yellow-500 text-yellow-500"
                           : "text-muted-foreground"
                       }`}

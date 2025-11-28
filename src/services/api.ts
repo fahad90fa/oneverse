@@ -67,7 +67,7 @@ export const apiService = {
     }
   },
 
-  async sendEmail(type: string, data: any) {
+  async sendEmail(type: string, data: Record<string, unknown>) {
     try {
       const response = await fetch(`${API_URL}/api/email/${type}`, {
         method: 'POST',
@@ -98,7 +98,7 @@ export const apiService = {
     }
   },
 
-  async searchProducts(query: string, filters?: any) {
+  async searchProducts(query: string, filters?: Record<string, unknown>) {
     try {
       const params = new URLSearchParams({ q: query, ...filters });
       const response = await fetch(`${API_URL}/api/search/products?${params}`);
@@ -109,7 +109,7 @@ export const apiService = {
     }
   },
 
-  async searchGigs(query: string, filters?: any) {
+  async searchGigs(query: string, filters?: Record<string, unknown>) {
     try {
       const params = new URLSearchParams({ q: query, ...filters });
       const response = await fetch(`${API_URL}/api/search/gigs?${params}`);
@@ -120,7 +120,7 @@ export const apiService = {
     }
   },
 
-  async searchJobs(query: string, filters?: any) {
+  async searchJobs(query: string, filters?: Record<string, unknown>) {
     try {
       const params = new URLSearchParams({ q: query, ...filters });
       const response = await fetch(`${API_URL}/api/search/jobs?${params}`);

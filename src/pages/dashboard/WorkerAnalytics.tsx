@@ -73,7 +73,7 @@ const WorkerAnalytics = () => {
       }
 
       setWorkerId(session.user.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -102,7 +102,7 @@ const WorkerAnalytics = () => {
       const currentMonth = new Date();
       let thisMonthTotal = 0;
 
-      payments.forEach((payment: any) => {
+      payments.forEach((payment: unknown) => {
         const date = new Date(payment.created_at);
         const monthKey = date.toLocaleDateString('en-US', { month: 'short' });
 
@@ -122,7 +122,7 @@ const WorkerAnalytics = () => {
       }));
 
       const categoryEarnings: Record<string, Record<string, number>> = {};
-      projects.forEach((project: any) => {
+      projects.forEach((project: unknown) => {
         const category = project.category || "Other";
         if (!categoryEarnings[category]) {
           categoryEarnings[category] = { completed: 0, active: 0, pending: 0 };
@@ -138,12 +138,12 @@ const WorkerAnalytics = () => {
         ...stats
       }));
 
-      const activeCount = projects.filter((p: any) => p.status === "active").length;
-      const completedCount = projects.filter((p: any) => p.status === "completed").length;
+      const activeCount = projects.filter((p: unknown) => p.status === "active").length;
+      const completedCount = projects.filter((p: unknown) => p.status === "completed").length;
       const completionRate = projects.length > 0 
         ? Math.round((completedCount / projects.length) * 100) 
         : 0;
-      const totalEarnings = payments.reduce((sum: number, p: any) => sum + Number(p.amount || 0), 0);
+      const totalEarnings = payments.reduce((sum: number, p: unknown) => sum + Number(p.amount || 0), 0);
 
       setEarningsData(earnings.length > 0 ? earnings : [
         { month: "Jan", earnings: 0 },

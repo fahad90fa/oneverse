@@ -26,7 +26,7 @@ export const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [visibility, setVisibility] = useState("public");
   const [loading, setLoading] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<Record<string, unknown> | null>(null);
 
   // Get current user info
   useState(() => {
@@ -102,7 +102,7 @@ export const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
       setVisibility("public");
 
       onPostCreated();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error creating post:", error);
       toast({
         title: "Error",

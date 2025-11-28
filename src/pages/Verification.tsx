@@ -26,7 +26,7 @@ interface Verification {
   id: string;
   verification_type: string;
   status: string;
-  submitted_data: any;
+  submitted_data: Record<string, unknown>;
   admin_notes?: string;
   verified_at?: string;
   expires_at?: string;
@@ -37,7 +37,7 @@ const Verification = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [verifications, setVerifications] = useState<Verification[]>([]);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Record<string, unknown>>(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [selectedType, setSelectedType] = useState<string>('');
@@ -74,7 +74,7 @@ const Verification = () => {
 
       setVerifications(verificationsData || []);
       setProfile(profileData);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",

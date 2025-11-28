@@ -34,7 +34,7 @@ const RoleApplication = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [existingApplication, setExistingApplication] = useState<any>(null);
+  const [existingApplication, setExistingApplication] = useState<Record<string, unknown> | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, File>>({});
 
   const form = useForm({
@@ -132,7 +132,7 @@ const RoleApplication = () => {
     });
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: Record<string, unknown>) => {
     if (!userId) return;
     
     setIsSubmitting(true);
@@ -183,7 +183,7 @@ const RoleApplication = () => {
       });
 
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Submission Failed',
         description: error.message,

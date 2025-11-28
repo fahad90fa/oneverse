@@ -26,7 +26,7 @@ const ProjectDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { toast } = useToast();
-  const [project, setProject] = useState<any>(null);
+  const [project, setProject] = useState<Record<string, unknown>>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string>('');
 
@@ -88,7 +88,7 @@ const ProjectDetail = () => {
       }
 
       setProject(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
       toast({
         title: "Error",

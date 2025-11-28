@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -50,7 +50,7 @@ export const useConnections = () => {
   const [followLoading, setFollowLoading] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const fetchFollowers = async (userId?: string) => {
+  const fetchFollowers = useCallback(async (userId?: string) => {
     try {
       const targetUserId = userId || (await supabase.auth.getSession()).data.session?.user?.id;
       if (!targetUserId) return;
@@ -73,7 +73,7 @@ export const useConnections = () => {
 
       if (error) throw error;
       setFollowers(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching followers:', error);
       toast({
         title: 'Error',
@@ -81,9 +81,9 @@ export const useConnections = () => {
         variant: 'destructive',
       });
     }
-  };
+  }, [toast]);
 
-  const fetchFollowing = async (userId?: string) => {
+  const fetchFollowing = useCallback(async (userId?: string) => {
     try {
       const targetUserId = userId || (await supabase.auth.getSession()).data.session?.user?.id;
       if (!targetUserId) return;
@@ -106,7 +106,7 @@ export const useConnections = () => {
 
       if (error) throw error;
       setFollowing(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching following:', error);
       toast({
         title: 'Error',
@@ -114,9 +114,9 @@ export const useConnections = () => {
         variant: 'destructive',
       });
     }
-  };
+  }, [toast]);
 
-  const fetchSuggestions = async () => {
+  const fetchSuggestions = useCallback(async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
@@ -140,7 +140,7 @@ export const useConnections = () => {
 
       if (error) throw error;
       setSuggestions(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching suggestions:', error);
       toast({
         title: 'Error',
@@ -148,7 +148,7 @@ export const useConnections = () => {
         variant: 'destructive',
       });
     }
-  };
+  }, [toast]);
 
   const followUser = async (userId: string) => {
     try {
@@ -207,7 +207,7 @@ export const useConnections = () => {
         description: 'You are now following this user',
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error following user:', error);
       toast({
         title: 'Error',
@@ -242,7 +242,7 @@ export const useConnections = () => {
         description: 'You have unfollowed this user',
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error unfollowing user:', error);
       toast({
         title: 'Error',
@@ -298,7 +298,7 @@ export const useConnections = () => {
         description: 'You have blocked this user',
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error blocking user:', error);
       toast({
         title: 'Error',
@@ -353,19 +353,19 @@ export const useConnections = () => {
     }
   };
 
-  const refetchAll = async (userId?: string) => {
-    setLoading(true);
-    await Promise.all([
-      fetchFollowers(userId),
-      fetchFollowing(userId),
-      fetchSuggestions(),
-    ]);
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const refetchAll = async (userId?: string) => {
+      setLoading(true);
+      await Promise.all([
+        fetchFollowers(userId),
+        fetchFollowing(userId),
+        fetchSuggestions(),
+      ]);
+      setLoading(false);
+    };
+
     refetchAll();
-  }, []);
+  }, [fetchFollowers, fetchFollowing, fetchSuggestions]);
 
   return {
     followers,

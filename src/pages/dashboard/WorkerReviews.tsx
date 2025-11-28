@@ -57,7 +57,7 @@ const WorkerReviews = () => {
       }
 
       setWorkerId(session.user.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -75,7 +75,7 @@ const WorkerReviews = () => {
 
       if (!data) return;
 
-      const transformed = data.map((review: any) => {
+      const transformed = data.map((review: unknown) => {
         const createdDate = new Date(review.created_at);
         const today = new Date();
         const diffTime = Math.abs(today.getTime() - createdDate.getTime());
@@ -100,10 +100,10 @@ const WorkerReviews = () => {
       });
 
       const avgRating = data.length > 0
-        ? (data.reduce((sum: number, r: any) => sum + (Number(r.rating) || 0), 0) / data.length)
+        ? (data.reduce((sum: number, r: unknown) => sum + (Number(r.rating) || 0), 0) / data.length)
         : 0;
 
-      const positiveCount = data.filter((r: any) => Number(r.rating) >= 4).length;
+      const positiveCount = data.filter((r: unknown) => Number(r.rating) >= 4).length;
       const positivePercentage = data.length > 0
         ? Math.round((positiveCount / data.length) * 100)
         : 0;

@@ -164,7 +164,7 @@ export const ReviewList = ({
           <span className="text-sm text-muted-foreground">Sort by:</span>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as 'newest' | 'helpful' | 'rating')}
             className="text-sm border border-border rounded px-2 py-1 bg-background"
           >
             <option value="newest">Newest</option>

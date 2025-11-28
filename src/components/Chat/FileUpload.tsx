@@ -37,8 +37,7 @@ export const FileUpload = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const validateFile = (file: File): boolean => {
-    // Check file size
+  const validateFile = useCallback((file: File): boolean => {
     if (file.size > maxSize * 1024 * 1024) {
       toast({
         title: "File too large",
@@ -48,7 +47,6 @@ export const FileUpload = ({
       return false;
     }
 
-    // Check file type
     const acceptedTypesArray = acceptedTypes.split(',');
     const isAccepted = acceptedTypesArray.some(type => {
       if (type.startsWith('.')) {
@@ -67,7 +65,7 @@ export const FileUpload = ({
     }
 
     return true;
-  };
+  }, [maxSize, acceptedTypes, toast]);
 
   const handleFileSelect = useCallback((file: File) => {
     if (!validateFile(file)) return;
@@ -75,7 +73,6 @@ export const FileUpload = ({
     setSelectedFile(file);
     onFileSelect(file);
 
-    // Create preview for images
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -85,7 +82,7 @@ export const FileUpload = ({
     } else {
       setPreview(null);
     }
-  }, [onFileSelect, maxSize, acceptedTypes, toast]);
+  }, [onFileSelect, validateFile]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();

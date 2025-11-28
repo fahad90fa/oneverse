@@ -122,7 +122,7 @@ const CreateGigModal = ({ children }: CreateGigModalProps) => {
       // Refresh the page to show the new gig
       window.location.reload();
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message || "Failed to create gig. Please try again.",

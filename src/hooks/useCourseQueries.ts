@@ -106,7 +106,7 @@ export const useCourseQueries = () => {
             .order('enrollment_date', { ascending: false });
           
           if (error) throw error;
-          return data as any[];
+          return data as unknown[];
         } catch (error) {
           console.error('Error fetching user enrollments:', error);
           return [];

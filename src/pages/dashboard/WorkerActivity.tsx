@@ -15,7 +15,7 @@ interface Activity {
   description: string;
   timestamp: string;
   date: string;
-  icon: any;
+  icon: React.ReactNode;
   color: string;
 }
 
@@ -65,7 +65,7 @@ const WorkerActivity = () => {
       }
 
       setWorkerId(session.user.id);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ const WorkerActivity = () => {
 
       if (!data) return;
 
-      const iconMap: Record<string, any> = {
+      const iconMap: Record<string, React.ReactNode> = {
         milestone: CheckCircle2,
         feedback: MessageSquare,
         file: FolderOpen,
@@ -100,7 +100,7 @@ const WorkerActivity = () => {
         proposal: "text-yellow-500"
       };
 
-      const transformed = data.map((activity: any) => {
+      const transformed = data.map((activity: unknown) => {
         const createdDate = new Date(activity.created_at);
         const today = new Date();
         const yesterday = new Date(today);

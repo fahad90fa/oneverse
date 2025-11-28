@@ -48,7 +48,7 @@ const EditProfile = () => {
       if (data) {
         setProfile(data);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -82,7 +82,7 @@ const EditProfile = () => {
       });
 
       navigate(`/profile/${session.user.id}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error",
         description: error.message,

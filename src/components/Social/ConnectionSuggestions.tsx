@@ -30,42 +30,41 @@ export const ConnectionSuggestions = ({ limit = 5 }) => {
   const { toast } = useToast();
 
   useEffect(() => {
+    const fetchSuggestions = async () => {
+      try {
+        setLoading(true);
+        const data = await connectionService.getConnectionSuggestions(limit);
+        
+        const suggestionsWithProfiles = await Promise.all(
+          data.map(async (suggestion) => {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("user_id", suggestion.suggested_user_id)
+              .single();
+
+            return {
+              ...suggestion,
+              profile,
+            };
+          })
+        );
+
+        setSuggestions(suggestionsWithProfiles.filter((s) => s.profile));
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load connection suggestions",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchSuggestions();
-  }, []);
-
-  const fetchSuggestions = async () => {
-    try {
-      setLoading(true);
-      const data = await connectionService.getConnectionSuggestions(limit);
-      
-      // Fetch profile data for each suggestion
-      const suggestionsWithProfiles = await Promise.all(
-        data.map(async (suggestion) => {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("user_id", suggestion.suggested_user_id)
-            .single();
-
-          return {
-            ...suggestion,
-            profile,
-          };
-        })
-      );
-
-      setSuggestions(suggestionsWithProfiles.filter((s) => s.profile));
-    } catch (error) {
-      console.error("Error fetching suggestions:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load connection suggestions",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [limit, toast]);
 
   const handleDismiss = async (suggestionId: string) => {
     try {

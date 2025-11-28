@@ -52,12 +52,70 @@ export const TimeTracker = ({ projectId, userRole }: TimeTrackerProps) => {
   const [manualBillable, setManualBillable] = useState(true);
 
   useEffect(() => {
+    const checkActiveTimer = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return;
+
+        const { data, error } = await supabase
+          .from("time_entries")
+          .select(`
+            *,
+            task:task_id (title)
+          `)
+          .eq("user_id", session.user.id)
+          .eq("project_id", projectId)
+          .is("end_time", null)
+          .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+
+        if (data) {
+          setActiveTimer(data);
+          const startTime = new Date(data.start_time);
+          const now = new Date();
+          setElapsedTime(Math.floor((now.getTime() - startTime.getTime()) / 1000));
+        }
+      } catch (error: unknown) {
+        console.error("Error checking active timer:", error);
+      }
+    };
+
+    const fetchTimeEntries = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return;
+
+        const { data, error } = await supabase
+          .from("time_entries")
+          .select(`
+            *,
+            task:task_id (title)
+          `)
+          .eq("user_id", session.user.id)
+          .eq("project_id", projectId)
+          .order("start_time", { ascending: false })
+          .limit(20);
+
+        if (error) throw error;
+        setTimeEntries(data || []);
+      } catch (error: unknown) {
+        console.error("Error fetching time entries:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load time entries",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTimeEntries();
-
-    // Check for active timer on mount
     checkActiveTimer();
+  }, [projectId, toast]);
 
-    // Set up timer interval
+  useEffect(() => {
     const interval = setInterval(() => {
       if (activeTimer) {
         setElapsedTime(prev => prev + 1);
@@ -66,65 +124,6 @@ export const TimeTracker = ({ projectId, userRole }: TimeTrackerProps) => {
 
     return () => clearInterval(interval);
   }, [activeTimer]);
-
-  const checkActiveTimer = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
-
-      const { data, error } = await supabase
-        .from("time_entries")
-        .select(`
-          *,
-          task:task_id (title)
-        `)
-        .eq("user_id", session.user.id)
-        .eq("project_id", projectId)
-        .is("end_time", null)
-        .single();
-
-      if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows
-
-      if (data) {
-        setActiveTimer(data);
-        const startTime = new Date(data.start_time);
-        const now = new Date();
-        setElapsedTime(Math.floor((now.getTime() - startTime.getTime()) / 1000));
-      }
-    } catch (error: any) {
-      console.error("Error checking active timer:", error);
-    }
-  };
-
-  const fetchTimeEntries = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
-
-      const { data, error } = await supabase
-        .from("time_entries")
-        .select(`
-          *,
-          task:task_id (title)
-        `)
-        .eq("user_id", session.user.id)
-        .eq("project_id", projectId)
-        .order("start_time", { ascending: false })
-        .limit(20);
-
-      if (error) throw error;
-      setTimeEntries(data || []);
-    } catch (error: any) {
-      console.error("Error fetching time entries:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load time entries",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const startTimer = async (taskId?: string) => {
     try {
@@ -155,7 +154,7 @@ export const TimeTracker = ({ projectId, userRole }: TimeTrackerProps) => {
         title: "Timer started",
         description: taskId ? "Time tracking started for task" : "Time tracking started"
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error starting timer:", error);
       toast({
         title: "Error",
@@ -185,7 +184,7 @@ export const TimeTracker = ({ projectId, userRole }: TimeTrackerProps) => {
         title: "Timer stopped",
         description: "Time entry saved"
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error stopping timer:", error);
       toast({
         title: "Error",
@@ -244,7 +243,7 @@ export const TimeTracker = ({ projectId, userRole }: TimeTrackerProps) => {
         title: "Time entry added",
         description: "Manual time entry has been saved"
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error adding manual entry:", error);
       toast({
         title: "Error",

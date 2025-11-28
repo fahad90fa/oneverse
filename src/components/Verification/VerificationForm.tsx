@@ -25,7 +25,7 @@ interface VerificationFormProps {
 export const VerificationForm = ({ verificationType, onClose, onSuccess }: VerificationFormProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
   const getFormConfig = (type: string) => {
@@ -83,7 +83,7 @@ export const VerificationForm = ({ verificationType, onClose, onSuccess }: Verif
 
   const config = getFormConfig(verificationType);
 
-  const handleInputChange = (name: string, value: any) => {
+  const handleInputChange = (name: string, value: unknown) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -135,7 +135,7 @@ export const VerificationForm = ({ verificationType, onClose, onSuccess }: Verif
       });
 
       onSuccess();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error:', error);
       toast({
         title: 'Error',
@@ -147,7 +147,7 @@ export const VerificationForm = ({ verificationType, onClose, onSuccess }: Verif
     }
   };
 
-  const renderField = (field: any) => {
+  const renderField = (field: unknown) => {
     switch (field.type) {
       case 'select':
         return (

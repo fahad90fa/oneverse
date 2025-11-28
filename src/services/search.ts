@@ -165,7 +165,7 @@ export const searchService = {
     }
   },
 
-  async indexProduct(product: any) {
+  async indexProduct(product: Record<string, unknown>) {
     try {
       await productsIndex.saveObject({
         objectID: product.id,
@@ -176,7 +176,7 @@ export const searchService = {
     }
   },
 
-  async indexGig(gig: any) {
+  async indexGig(gig: Record<string, unknown>) {
     try {
       await gigsIndex.saveObject({
         objectID: gig.id,
@@ -187,7 +187,7 @@ export const searchService = {
     }
   },
 
-  async indexJob(job: any) {
+  async indexJob(job: Record<string, unknown>) {
     try {
       await jobsIndex.saveObject({
         objectID: job.id,
@@ -198,7 +198,7 @@ export const searchService = {
     }
   },
 
-  async indexUser(user: any) {
+  async indexUser(user: Record<string, unknown>) {
     try {
       await usersIndex.saveObject({
         objectID: user.id,
@@ -324,7 +324,7 @@ export const searchService = {
     }
   },
 
-  applyFilters(items: any[], filters: SearchFilters) {
+  applyFilters(items: unknown[], filters: SearchFilters) {
     let filtered = items;
 
     if (filters.minPrice !== undefined) {
@@ -357,7 +357,7 @@ export const searchService = {
     return filtered;
   },
 
-  sortResults(items: any[], sortBy: 'relevance' | 'price_asc' | 'price_desc' | 'newest' | 'rating' = 'relevance') {
+  sortResults(items: unknown[], sortBy: 'relevance' | 'price_asc' | 'price_desc' | 'newest' | 'rating' = 'relevance') {
     const sorted = [...items];
 
     switch (sortBy) {

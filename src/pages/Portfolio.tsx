@@ -13,7 +13,7 @@ import {
 
 const Portfolio = () => {
   const navigate = useNavigate();
-  const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
+  const [portfolioItems, setPortfolioItems] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Portfolio = () => {
 
       if (error) throw error;
       setPortfolioItems(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching portfolio:", error);
     } finally {
       setLoading(false);
